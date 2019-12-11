@@ -14,18 +14,15 @@ paths:
       description: Authenticate a user.
       operationId: authenticateUser
       consumes:
-        - application/x-www-form-urlencoded
+        - application/json
       produces:
         - application/json
       parameters:
-        - name: email
-          in: formData
+        - name: credentials
+          in: body
           required: true
-          type: string
-        - name: password
-          in: formData
-          required: true
-          type: string
+          schema:
+            $ref: '#/definitions/UserCredentials'
       responses:
         '200':
           description: success
@@ -62,16 +59,17 @@ paths:
       description: Update the password of an existing user account.
       operationId: updateUser
       consumes:
-        - application/x-www-form-urlencoded
+        - application/json
       parameters:
         - name: email
           in: path
           required: true
           type: string
         - name: password
-          in: formData
+          in: body
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         400:
           description: invalid email supplied
@@ -89,4 +87,11 @@ definitions:
       password:
         type: string
       role:
+        type: string
+  UserCredentials:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
         type: string
