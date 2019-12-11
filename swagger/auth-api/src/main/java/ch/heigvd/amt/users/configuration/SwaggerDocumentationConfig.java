@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns.configuration;
+package ch.heigvd.amt.users.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class SwaggerDocumentationConfig {
 
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("Fruits API")
+            .title("Users API")
             .description("An API to demonstrate Swagger and Spring Boot")
             .license("")
             .licenseUrl("http://unlicense.org")
@@ -31,7 +31,7 @@ public class SwaggerDocumentationConfig {
     public Docket customImplementation(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                    .apis(RequestHandlerSelectors.basePackage("ch.heigvd.amt.fruits.api"))
+                    .apis(RequestHandlerSelectors.basePackage("ch.heigvd.amt.users.api"))
                     .build()
                 .directModelSubstitute(org.joda.time.LocalDate.class, java.sql.Date.class)
                 .directModelSubstitute(org.joda.time.DateTime.class, java.util.Date.class)

@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns;
+package ch.heigvd.amt.users;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -10,7 +10,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan(basePackages = {"ch.heigvd.amt.unicorns", "ch.heigvd.amt.unicorns.api"})
+@ComponentScan(basePackages = {"ch.heigvd.amt.users", "ch.heigvd.amt.users.api"})
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override

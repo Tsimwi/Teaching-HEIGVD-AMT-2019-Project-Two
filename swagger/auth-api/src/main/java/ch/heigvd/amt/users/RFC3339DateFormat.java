@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns;
+package ch.heigvd.amt.users;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;

@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns.configuration;
+package ch.heigvd.amt.users.configuration;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

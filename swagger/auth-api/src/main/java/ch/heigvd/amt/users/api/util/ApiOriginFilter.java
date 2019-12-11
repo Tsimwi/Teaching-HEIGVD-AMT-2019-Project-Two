@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns.api.util;
+package ch.heigvd.amt.users.api.util;
 
 import java.io.IOException;
 
