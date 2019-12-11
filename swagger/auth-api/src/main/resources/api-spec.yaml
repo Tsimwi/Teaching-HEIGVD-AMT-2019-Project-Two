@@ -1,51 +1,92 @@
 swagger: '2.0'
 info:
-  version: '0.1.0'
-  title: Fruits API
-  description: An API to demonstrate Swagger and Spring Boot
+  description: First API specifications.
+  version: '1.0'
+  title: AMT Account Manager
 host: localhost:8080
 basePath: /api
 schemes:
   - http
+
 paths:
-  /fruits:
+  /authentication:
     post:
-      description: create a fruit
-      operationId: createFruit
+      description: Authenticate a user.
+      operationId: authenticateUser
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: email
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
+          headers:
+            X-Expires-After:
+              type: string
+              format: date-time
+              description: date in UTC when token expires
+        400:
+          description: invalid email/password supplied
+
+  /users:
+    post:
+      description: Add a new user account.
+      operationId: addUser
       consumes:
         - application/json
       parameters:
-        - name: fruit
+        - name: user
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Fruit'
+            $ref: '#/definitions/User'
       responses:
         '201':
           description: created
           schema:
             type: object
-    get:
-      description: get the list of all fruits
-      operationId: getFruits
-      produces:
-        - application/json
+
+  /users/{email}:
+    patch:
+      description: Update the password of an existing user account.
+      operationId: updateUser
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: email
+          in: path
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
       responses:
-        '200':
-          description: success
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Fruit'
+        400:
+          description: invalid email supplied
+
 definitions:
-  Fruit:
+  User:
     type: object
     properties:
-      kind:
+      email:
         type: string
-      colour:
+      firstName:
         type: string
-      size:
+      lastName:
         type: string
-      weight:
+      password:
+        type: string
+      role:
         type: string
