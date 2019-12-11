@@ -34,7 +34,7 @@ paths:
               format: date-time
               description: date in UTC when token expires
         400:
-          description: invalid email/password supplied
+          description: Invalid email/password supplied.
 
   /users:
     post:
@@ -71,8 +71,8 @@ paths:
           schema:
             type: string
       responses:
-        400:
-          description: invalid email supplied
+        404:
+          description: User not found.
 
 definitions:
   User:
@@ -88,6 +88,7 @@ definitions:
         type: string
       role:
         type: string
+
   UserCredentials:
     type: object
     properties:
