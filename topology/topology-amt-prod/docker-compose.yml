@@ -1,0 +1,26 @@
+version: '3'
+services:
+
+  db:
+    build: ../../images/postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    container_name: amt_postgres
+
+  pgadmin:
+    build: ../../images/pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=amt@amt.ch
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - 8888:80
+    container_name: amt_pgadmin
+    volumes:
+      - ./dump:/var/lib/pgadmin
+    depends_on:
+      - db

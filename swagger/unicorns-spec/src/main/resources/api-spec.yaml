@@ -1,33 +1,35 @@
 swagger: '2.0'
 info:
-  version: '0.1.0'
-  title: my simple api
-  description: An API to demonstrate Swagger
+  description: First API specifications.
+  version: '1.0'
+  title: AMT Account Manager
 host: localhost:8080
 basePath: /api
 schemes:
   - http
+
 paths:
-  /fruits:
+  /unicorns:
     post:
-      description: create a fruit
-      operationId: createFruit
+      description: Add a new unicorn.
+      operationId: addUnicorn
       consumes:
         - application/json
       parameters:
-        - name: fruit
+        - name: unicorn
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Fruit'
+            $ref: '#/definitions/Unicorn'
       responses:
         '201':
           description: created
           schema:
             type: object
+
     get:
-      description: get the list of all fruits
-      operationId: getFruits
+      description: Get the list of all unicorns.
+      operationId: getUnicorns
       produces:
         - application/json
       responses:
@@ -36,14 +38,173 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Fruit'
+              $ref: '#/definitions/Unicorn'
+
+  /unicorns/{name}:
+    get:
+      description: Returns a unicorn by its name.
+      operationId: getUnicornByName
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: fullView
+          in: query
+          default: false
+          required: false
+          type: boolean
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Unicorn'
+        404:
+          description: Unicorn not found.
+
+    patch:
+      description: Update a unicorn.
+      operationId: updateUnicorn
+      consumes:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: unicorn
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Unicorn'
+      responses:
+        404:
+          description: Unicorn not found.
+
+    delete:
+      description: Delete a unicorn.
+      operationId: deleteUnicorn
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+      responses:
+        404:
+          description: Unicorn not found.
+
+
+  /magics:
+    post:
+      description: Add a new magic.
+      operationId: addMagic
+      consumes:
+        - application/json
+      parameters:
+        - name: magic
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Magic'
+      responses:
+        201:
+          description: created
+          schema:
+            type: object
+
+    get:
+      description: Get the list of all magics.
+      operationId: getMagics
+      produces:
+        - application/json
+      responses:
+        200:
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Magic'
+
+  /magics/{name}:
+    get:
+      description: Returns a magic by its name.
+      operationId: getMagicByName
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: fullView
+          in: query
+          default: false
+          required: false
+          type: boolean
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Magic'
+        404:
+          description: Magic not found.
+
+    patch:
+      description: Update a magic.
+      operationId: updateMagic
+      consumes:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: magic
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Magic'
+      responses:
+        404:
+          description: Magic not found.
+
+    delete:
+      description: Delete a magic.
+      operationId: deleteMagic
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+      responses:
+        404:
+          description: Magic not found.
+
 definitions:
-  Fruit:
+  Unicorn:
     type: object
     properties:
-      kind:
+      name:
         type: string
-      colour:
+      color:
         type: string
-      size:
+      hasWings:
+        type: boolean
+      speed:
+        type: integer
+
+  Magic:
+    type: object
+    properties:
+      name:
         type: string
+      spell:
+        type: string
+      power:
+        type: integer

@@ -1,13 +1,13 @@
-package ch.heigvd.amt.unicorns.api.spec.steps;
+package ch.heigvd.amt.users.api.spec.steps;
 
-import ch.heigvd.amt.unicorns.api.spec.helpers.Environment;
+import ch.heigvd.amt.users.api.spec.helpers.Environment;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import ch.heigvd.amt.unicorns.ApiException;
-import ch.heigvd.amt.unicorns.ApiResponse;
-import ch.heigvd.amt.unicorns.api.DefaultApi;
-import ch.heigvd.amt.unicorns.api.dto.Fruit;
+import ch.heigvd.amt.users.ApiException;
+import ch.heigvd.amt.users.ApiResponse;
+import ch.heigvd.amt.users.api.DefaultApi;
+import ch.heigvd.amt.users.api.dto.Fruit;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -39,7 +39,7 @@ public class CreationSteps {
 
     @Given("^I have a fruit payload$")
     public void i_have_a_fruit_payload() throws Throwable {
-        fruit = new ch.heigvd.amt.unicorns.api.dto.Fruit();
+        fruit = new ch.heigvd.amt.users.api.dto.Fruit();
     }
 
     @When("^I POST it to the /fruits endpoint$")

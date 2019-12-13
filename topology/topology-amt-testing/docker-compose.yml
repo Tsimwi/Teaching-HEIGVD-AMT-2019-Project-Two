@@ -1,0 +1,34 @@
+version: '3'
+services:
+
+  payara:
+    build: ../../images/payara-testing
+    environment:
+     - ADMIN_PASSWORD=adminadmin
+    logging:
+      driver: "none"
+    ports:
+     - 8080:8080
+     - 4848:4848
+     - 9009:9009
+    container_name: amt_payara_testing
+
+  postgres:
+    build: ../../images/postgres
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+    container_name: amt_postgres_testing
+
+  pgadmin:
+    build: ../../images/pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=amt@amt.ch
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - 8888:80
+    container_name: amt_pgadmin_testing
+    depends_on:
+      - postgres

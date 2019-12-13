@@ -1,49 +1,98 @@
 swagger: '2.0'
 info:
-  version: '0.1.0'
-  title: my simple api
-  description: An API to demonstrate Swagger
+  description: First API specifications.
+  version: '1.0'
+  title: AMT Account Manager
 host: localhost:8080
 basePath: /api
 schemes:
   - http
+
 paths:
-  /fruits:
+  /authentication:
     post:
-      description: create a fruit
-      operationId: createFruit
+      description: Authenticate a user.
+      operationId: authenticateUser
       consumes:
         - application/json
+      produces:
+        - application/json
       parameters:
-        - name: fruit
+        - name: credentials
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Fruit'
+            $ref: '#/definitions/UserCredentials'
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
+          headers:
+            X-Expires-After:
+              type: string
+              format: date-time
+              description: date in UTC when token expires
+        400:
+          description: Invalid email/password supplied.
+
+  /users:
+    post:
+      description: Add a new user account.
+      operationId: addUser
+      consumes:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
       responses:
         '201':
           description: created
           schema:
             type: object
-    get:
-      description: get the list of all fruits
-      operationId: getFruits
-      produces:
+
+  /users/{email}:
+    patch:
+      description: Update the password of an existing user account.
+      operationId: updateUser
+      consumes:
         - application/json
-      responses:
-        '200':
-          description: success
+      parameters:
+        - name: email
+          in: path
+          required: true
+          type: string
+        - name: password
+          in: body
+          required: true
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Fruit'
+            type: string
+      responses:
+        404:
+          description: User not found.
+
 definitions:
-  Fruit:
+  User:
     type: object
     properties:
-      kind:
+      email:
         type: string
-      colour:
+      firstName:
         type: string
-      size:
+      lastName:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+
+  UserCredentials:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
         type: string

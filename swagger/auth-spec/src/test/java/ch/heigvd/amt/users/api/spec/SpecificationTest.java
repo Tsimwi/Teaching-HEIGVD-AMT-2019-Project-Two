@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns.api.spec;
+package ch.heigvd.amt.users.api.spec;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;

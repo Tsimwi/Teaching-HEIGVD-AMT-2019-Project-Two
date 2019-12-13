@@ -1,4 +1,4 @@
-package ch.heigvd.amt.unicorns.api.spec.helpers;
+package ch.heigvd.amt.users.api.spec.helpers;
 
 import ch.heigvd.amt.unicorns.api.DefaultApi;
 
@@ -15,7 +15,7 @@ public class Environment {
     public Environment() throws IOException {
         Properties properties = new Properties();
         properties.load(this.getClass().getClassLoader().getResourceAsStream("environment.properties"));
-        String url = properties.getProperty("ch.heigvd.amt.fruits.server.url");
+        String url = properties.getProperty("ch.heigvd.amt.users.server.url");
         api.getApiClient().setBasePath(url);
 
     }
