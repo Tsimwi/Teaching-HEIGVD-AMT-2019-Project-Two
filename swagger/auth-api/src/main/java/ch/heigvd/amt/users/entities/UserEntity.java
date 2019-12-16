@@ -54,4 +54,8 @@ public class UserEntity implements Serializable {
     public String getMail() {
         return mail;
     }
+
+    public void setMail(String email) {
+        this.mail = email;
+    }
 }

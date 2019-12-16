@@ -1,5 +1,7 @@
 package ch.heigvd.amt.users.api.endpoints;
 
+import ch.heigvd.amt.users.business.AuthenticationService;
+import ch.heigvd.amt.users.business.IAuthenticationService;
 import ch.heigvd.amt.users.entities.UserEntity;
 import ch.heigvd.amt.users.repositories.UserRepository;
 import ch.heigvd.amt.users.api.UsersApi;
@@ -25,11 +27,14 @@ public class UsersApiController implements UsersApi {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AuthenticationService authenticationService;
+
     public ResponseEntity<Object> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
-//        UserEntity newUserEntity = toUserEntity(user);
-//        userRepository.save(newUserEntity);
-//        String email = newUserEntity.getMail();
-//
+        UserEntity newUserEntity = toUserEntity(user);
+
+        userRepository.save(newUserEntity);
+
 //        URI location = ServletUriComponentsBuilder
 //                .fromCurrentRequest().path("/{id}")
 //                .buildAndExpand(newUserEntity.getMail()).toUri();
@@ -40,10 +45,7 @@ public class UsersApiController implements UsersApi {
 
 
     public ResponseEntity<Void> updateUser(@ApiParam(value = "",required=true) @PathVariable("email") String email, @ApiParam(value = "" ,required=true )  @Valid @RequestBody String password) {
-//        List<User> users = new ArrayList<>();
-//        for (UserEntity userEntity : userRepository.findAll()) {
-//            users.add(toUser(userEntity));
-//        }
+
 
         return null;
     }
@@ -51,9 +53,10 @@ public class UsersApiController implements UsersApi {
 
     private UserEntity toUserEntity(User user) {
         UserEntity entity = new UserEntity();
+        entity.setMail(user.getEmail());
         entity.setFirstName(user.getFirstName());
         entity.setLastName(user.getLastName());
-        entity.setPassword(user.getPassword());
+        entity.setPassword(authenticationService.hashPassword(user.getPassword()));
         entity.setRole(user.getRole());
         return entity;
     }
