@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,33 +25,27 @@ public class UsersApiController implements UsersApi {
     @Autowired
     UserRepository userRepository;
 
-    public ResponseEntity<Object> createUser(@ApiParam(value = "", required = true) @Valid @RequestBody User user) {
-        UserEntity newUserEntity = toUserEntity(user);
-        userRepository.save(newUserEntity);
-        String email = newUserEntity.getMail();
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newUserEntity.getMail()).toUri();
-
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<Object> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
+//        UserEntity newUserEntity = toUserEntity(user);
+//        userRepository.save(newUserEntity);
+//        String email = newUserEntity.getMail();
+//
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentRequest().path("/{id}")
+//                .buildAndExpand(newUserEntity.getMail()).toUri();
+//
+//        return ResponseEntity.created(location).build();
+        return null;
     }
 
 
-    public ResponseEntity<List<User>> getUsers() {
-        List<User> users = new ArrayList<>();
-        for (UserEntity userEntity : userRepository.findAll()) {
-            users.add(toUser(userEntity));
-        }
-        /*
-        User staticUser = new User();
-        staticUser.setColour("red");
-        staticUser.setKind("banana");
-        staticUser.setSize("medium");
-        List<User> users = new ArrayList<>();
-        users.add(staticUser);
-        */
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Void> updateUser(@ApiParam(value = "",required=true) @PathVariable("email") String email, @ApiParam(value = "" ,required=true )  @Valid @RequestBody String password) {
+//        List<User> users = new ArrayList<>();
+//        for (UserEntity userEntity : userRepository.findAll()) {
+//            users.add(toUser(userEntity));
+//        }
+
+        return null;
     }
 
 

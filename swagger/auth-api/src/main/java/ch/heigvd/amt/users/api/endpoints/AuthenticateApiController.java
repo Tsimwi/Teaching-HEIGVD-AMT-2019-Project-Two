@@ -26,16 +26,17 @@ public class AuthenticateApiController implements AuthenticationApi {
     @Autowired
     UserRepository userRepository;
 
-    public ResponseEntity<Object> createUser(@ApiParam(value = "", required = true) @Valid @RequestBody UserCredentials creds) {
+    public ResponseEntity<String> authenticateUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody UserCredentials credentials) {
 //        UserEntity newUserEntity = toUserEntity(user);
 //        userRepository.save(newUserEntity);
 //        String email = newUserEntity.getMail();
+//
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentRequest().path("/{id}")
+//                .buildAndExpand().toUri();
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand().toUri();
-
-        return ResponseEntity.created(location).build();
+//        return ResponseEntity.created(location).build();
+        return null;
     }
 
 }
