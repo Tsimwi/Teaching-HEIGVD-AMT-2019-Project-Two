@@ -6,10 +6,12 @@ import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,19 +28,15 @@ public class MagicsApiController implements MagicsApi {
     @Autowired
     MagicRepository magicRepository;
 
-    public ResponseEntity<Object> addMagic(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Magic magic) {        MagicEntity newMagicEntity = toMagicEntity(magic);
+    public ResponseEntity<Void> addMagic(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization, @ApiParam(value = "" ,required=true )  @Valid @RequestBody Magic magic) {
+        MagicEntity newMagicEntity = toMagicEntity(magic);
         magicRepository.save(newMagicEntity);
-        Long id = newMagicEntity.getId();
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newMagicEntity.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
 
-    public ResponseEntity<List<Magic>> getMagics() {
+    public ResponseEntity<List<Magic>> getMagics(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization) {
         List<Magic> magics = new ArrayList<>();
         for (MagicEntity magicEntity : magicRepository.findAll()) {
             magics.add(toMagic(magicEntity));
@@ -54,15 +52,15 @@ public class MagicsApiController implements MagicsApi {
         return ResponseEntity.ok(magics);
     }
 
-    public ResponseEntity<Magic> getMagicByName(@ApiParam(value = "",required=true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView) {
+    public ResponseEntity<Magic> getMagicByName(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView) {
         return null;
     }
 
-    public ResponseEntity<Void> deleteMagic(@ApiParam(value = "",required=true) @PathVariable("name") String name) {
+    public ResponseEntity<Void> deleteMagic(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name) {
         return null;
     }
 
-    public ResponseEntity<Void> updateMagic(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Magic magic) {
+    public ResponseEntity<Void> updateMagic(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Magic magic) {
         return null;
     }
 

@@ -6,10 +6,12 @@ import ch.heigvd.amt.unicorns.api.UnicornsApi;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,20 +28,15 @@ public class UnicornsApiController implements UnicornsApi {
     @Autowired
     UnicornRepository unicornRepository;
 
-    public ResponseEntity<Object> addUnicorn(@ApiParam(value = "", required = true) @Valid @RequestBody Unicorn unicorn) {
+    public ResponseEntity<Void> addUnicorn(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Unicorn unicorn) {
         UnicornEntity newUnicornEntity = toUnicornEntity(unicorn);
         unicornRepository.save(newUnicornEntity);
-        Long id = newUnicornEntity.getId();
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newUnicornEntity.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
 
-    public ResponseEntity<List<Unicorn>> getUnicorns() {
+    public ResponseEntity<List<Unicorn>> getUnicorns(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization) {
         List<Unicorn> unicorns = new ArrayList<>();
         for (UnicornEntity unicornEntity : unicornRepository.findAll()) {
             unicorns.add(toUnicorn(unicornEntity));
@@ -55,15 +52,15 @@ public class UnicornsApiController implements UnicornsApi {
         return ResponseEntity.ok(unicorns);
     }
 
-    public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "", required = true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue = "false") Boolean fullView) {
+    public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView) {
         return null;
     }
 
-    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "", required = true) @PathVariable("name") String name, @ApiParam(value = "", required = true) @Valid @RequestBody Unicorn unicorn) {
+    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Unicorn unicorn) {
         return null;
     }
 
-    public ResponseEntity<Void> deleteUnicorn(@ApiParam(value = "", required = true) @PathVariable("name") String name) {
+    public ResponseEntity<Void> deleteUnicorn(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name) {
         return null;
     }
 

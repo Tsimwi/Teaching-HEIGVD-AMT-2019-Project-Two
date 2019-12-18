@@ -16,29 +16,40 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: unicorn
           in: body
           required: true
           schema:
             $ref: '#/definitions/Unicorn'
       responses:
-        '201':
-          description: created
-          schema:
-            type: object
+        201:
+          description: Unicorn successfully created.
+        401:
+          description: Invalid or missing token.
 
     get:
       description: Get the list of all unicorns.
       operationId: getUnicorns
       produces:
         - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
       responses:
-        '200':
+        200:
           description: success
           schema:
             type: array
             items:
               $ref: '#/definitions/Unicorn'
+        401:
+          description: Invalid or missing token.
 
   /unicorns/{name}:
     get:
@@ -47,6 +58,10 @@ paths:
       produces:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: name
           in: path
           required: true
@@ -61,6 +76,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Unicorn'
+        401:
+          description: Invalid or missing token.
         404:
           description: Unicorn not found.
 
@@ -70,6 +87,10 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: name
           in: path
           required: true
@@ -80,20 +101,30 @@ paths:
           schema:
             $ref: '#/definitions/Unicorn'
       responses:
+        200:
+          description: Unicorn successfully updated.
+        401:
+          description: Invalid or missing token.
         404:
           description: Unicorn not found.
 
     delete:
       description: Delete a unicorn.
       operationId: deleteUnicorn
-      produces:
-        - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: name
           in: path
           required: true
           type: string
       responses:
+        200:
+          description: Unicorn successfully deleted.
+        401:
+          description: Invalid or missing token.
         404:
           description: Unicorn not found.
 
@@ -105,6 +136,10 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: magic
           in: body
           required: true
@@ -112,15 +147,20 @@ paths:
             $ref: '#/definitions/Magic'
       responses:
         201:
-          description: created
-          schema:
-            type: object
+          description: Magic successfully created.
+        401:
+          description: Invalid or missing token.
 
     get:
       description: Get the list of all magics.
       operationId: getMagics
       produces:
         - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
       responses:
         200:
           description: success
@@ -128,6 +168,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Magic'
+        401:
+          description: Invalid or missing token.
 
   /magics/{name}:
     get:
@@ -136,6 +178,10 @@ paths:
       produces:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: name
           in: path
           required: true
@@ -150,6 +196,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Magic'
+        401:
+          description: Invalid or missing token.
         404:
           description: Magic not found.
 
@@ -159,6 +207,10 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: name
           in: path
           required: true
@@ -169,22 +221,55 @@ paths:
           schema:
             $ref: '#/definitions/Magic'
       responses:
+        200:
+          description: Magic succesfully deleted.
+        401:
+          description: Invalid or missing token.
         404:
           description: Magic not found.
 
     delete:
       description: Delete a magic.
       operationId: deleteMagic
-      produces:
-        - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: name
           in: path
           required: true
           type: string
       responses:
+        200:
+          description: Magic successfully deleted.
+        401:
+          description: Invalid or missing token.
         404:
           description: Magic not found.
+
+  /magicornrelationship:
+    post:
+      description: Add/remove a relation between a unicorn and a magic.
+      operationId: changeMagicorn
+      consumes:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: operation
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MagicornOperation'
+      responses:
+        201:
+          description: Successfull operation.
+        401:
+          description: Invalid or missing token.
+
 
 definitions:
   Unicorn:
@@ -198,6 +283,10 @@ definitions:
         type: boolean
       speed:
         type: integer
+      magics:
+        type: array
+        items:
+          $ref: '#/definitions/Magic'
 
   Magic:
     type: object
@@ -208,3 +297,17 @@ definitions:
         type: string
       power:
         type: integer
+      unicorns:
+        type: array
+        items:
+          $ref: '#/definitions/Unicorn'
+
+  MagicornOperation:
+    type: object
+    properties:
+      operation:
+        type: string
+      unicorn:
+        type: string
+      magic:
+        type: string

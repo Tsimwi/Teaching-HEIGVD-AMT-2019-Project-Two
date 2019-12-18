@@ -37,22 +37,19 @@ public class UsersApiController implements UsersApi {
     @Autowired
     TokenImplementation tokenImplementation;
 
-    public ResponseEntity<Object> addUser(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
-
+    public ResponseEntity<Object> addUser(@ApiParam(value = "", required = true) @RequestHeader(value = "Authorization", required = true) String authorization, @ApiParam(value = "", required = true) @Valid @RequestBody User user) {
         boolean userIsAdmin = tokenImplementation.tokenIsAdmin(authorization);
-        if(userIsAdmin){
+        if (userIsAdmin) {
             UserEntity newUserEntity = toUserEntity(user);
             userRepository.save(newUserEntity);
             return new ResponseEntity<Object>(user, HttpStatus.CREATED);
-        }else {
+        } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 
 
-    public ResponseEntity<Void> updateUser(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("email") String email,@ApiParam(value = "" ,required=true )  @Valid @RequestBody String password) {
-
-
+    public ResponseEntity<Void> updateUser(@ApiParam(value = "", required = true) @RequestHeader(value = "Authorization", required = true) String authorization, @ApiParam(value = "", required = true) @PathVariable("email") String email, @ApiParam(value = "", required = true) @Valid @RequestBody String password) {
         return null;
     }
 
