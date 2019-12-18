@@ -43,6 +43,10 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: user
           in: body
           required: true
@@ -61,6 +65,10 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
         - name: email
           in: path
           required: true

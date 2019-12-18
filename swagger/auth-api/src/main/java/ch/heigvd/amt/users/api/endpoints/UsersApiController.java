@@ -2,16 +2,20 @@ package ch.heigvd.amt.users.api.endpoints;
 
 import ch.heigvd.amt.users.business.AuthenticationService;
 import ch.heigvd.amt.users.business.IAuthenticationService;
+import ch.heigvd.amt.users.business.TokenImplementation;
 import ch.heigvd.amt.users.entities.UserEntity;
 import ch.heigvd.amt.users.repositories.UserRepository;
 import ch.heigvd.amt.users.api.UsersApi;
 import ch.heigvd.amt.users.api.model.User;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -28,23 +32,25 @@ public class UsersApiController implements UsersApi {
     UserRepository userRepository;
 
     @Autowired
-    AuthenticationService authenticationService;
+    IAuthenticationService authenticationService;
 
-    public ResponseEntity<Object> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
-        UserEntity newUserEntity = toUserEntity(user);
+    @Autowired
+    TokenImplementation tokenImplementation;
 
-        userRepository.save(newUserEntity);
+    public ResponseEntity<Object> addUser(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
 
-//        URI location = ServletUriComponentsBuilder
-//                .fromCurrentRequest().path("/{id}")
-//                .buildAndExpand(newUserEntity.getMail()).toUri();
-//
-//        return ResponseEntity.created(location).build();
-        return null;
+        boolean userIsAdmin = tokenImplementation.tokenIsAdmin(authorization);
+        if(userIsAdmin){
+            UserEntity newUserEntity = toUserEntity(user);
+            userRepository.save(newUserEntity);
+            return new ResponseEntity<Object>(user, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
     }
 
 
-    public ResponseEntity<Void> updateUser(@ApiParam(value = "",required=true) @PathVariable("email") String email, @ApiParam(value = "" ,required=true )  @Valid @RequestBody String password) {
+    public ResponseEntity<Void> updateUser(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("email") String email,@ApiParam(value = "" ,required=true )  @Valid @RequestBody String password) {
 
 
         return null;
