@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class TokenImplementation {
+public class TokenImplementation implements ITokenImplementation {
 
     @Autowired
     UserRepository userRepository;
