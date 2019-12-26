@@ -7,6 +7,11 @@ host: localhost:8080
 basePath: /api
 schemes:
   - http
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
 
 paths:
   /authentication:
@@ -14,8 +19,6 @@ paths:
       description: Authenticate a user.
       operationId: authenticateUser
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: credentials
@@ -29,15 +32,16 @@ paths:
           schema:
             type: string
           headers:
-            X-Expires-After:
+            Authorization:
               type: string
-              format: date-time
-              description: date in UTC when token expires
+              description: JWT token
         400:
           description: Invalid email/password supplied.
 
   /users:
     post:
+      security:
+        - Bearer: []
       description: Add a new user account.
       operationId: addUser
       consumes:
@@ -49,17 +53,17 @@ paths:
           schema:
             $ref: '#/definitions/User'
       responses:
-        '201':
+        201:
           description: created
-          schema:
-            type: object
 
   /users/{email}:
     patch:
+      security:
+        - Bearer: []
       description: Update the password of an existing user account.
       operationId: updateUser
       consumes:
-        - application/json
+        - text/html
       parameters:
         - name: email
           in: path
@@ -71,6 +75,8 @@ paths:
           schema:
             type: string
       responses:
+        201:
+          description: User updated successfully.
         404:
           description: User not found.
 

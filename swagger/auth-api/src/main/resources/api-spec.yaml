@@ -63,7 +63,7 @@ paths:
       description: Update the password of an existing user account.
       operationId: updateUser
       consumes:
-        - application/json
+        - text/html
       parameters:
         - name: email
           in: path

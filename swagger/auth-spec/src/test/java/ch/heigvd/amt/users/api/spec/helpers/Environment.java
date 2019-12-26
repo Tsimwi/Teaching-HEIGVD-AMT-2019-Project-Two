@@ -1,6 +1,7 @@
 package ch.heigvd.amt.users.api.spec.helpers;
 
-import ch.heigvd.amt.unicorns.api.DefaultApi;
+
+import ch.heigvd.amt.users.api.DefaultApi;
 
 import java.io.IOException;
 import java.util.Properties;

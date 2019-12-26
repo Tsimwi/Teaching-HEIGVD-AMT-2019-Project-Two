@@ -45,11 +45,14 @@ public class TokenImplementation implements ITokenImplementation {
                 .sign(algorithmHS);
     }
 
-    public boolean tokenIsAdmin(String token) {
-        DecodedJWT jwt = JWT.decode(token);
-        Claim claim = jwt.getClaim("role");
-        String role = claim.asString();
-        return role.equals("Administrator");
+    /**
+     * Loof if the user provided by the token existe or not
+     * @param decodedJWT token given in the header of the request
+     * @return true if the user exist, false otherwise
+     */
+    public boolean tokenUserExist(DecodedJWT decodedJWT){
+        String email = decodedJWT.getSubject();
+        return userRepository.findByMail(email) != null;
     }
 
     public String getTokenFromHeaderAuthorization(String token) throws ApiException {

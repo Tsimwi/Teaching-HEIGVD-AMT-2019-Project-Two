@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public interface ITokenImplementation {
 
     String createToken(UserCredentials credentials) throws ApiException;
-    boolean tokenIsAdmin(String token);
+    boolean tokenUserExist(DecodedJWT decodedJWT);
     String getTokenFromHeaderAuthorization(String token) throws ApiException;
     DecodedJWT decodeJWT(String token) throws ApiException;
 }
