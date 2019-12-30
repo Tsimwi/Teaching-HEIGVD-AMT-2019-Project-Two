@@ -3,6 +3,7 @@ package ch.heigvd.amt.users.api.endpoints;
 import ch.heigvd.amt.users.api.AuthenticationApi;
 import ch.heigvd.amt.users.api.exceptions.ApiException;
 import ch.heigvd.amt.users.api.model.UserCredentials;
+import ch.heigvd.amt.users.business.AuthenticationService;
 import ch.heigvd.amt.users.business.TokenImplementation;
 import ch.heigvd.amt.users.repositories.UserRepository;
 import io.swagger.annotations.ApiParam;
@@ -20,19 +21,14 @@ import javax.validation.Valid;
 public class AuthenticateApiController implements AuthenticationApi {
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    TokenImplementation tokenImplementation;
+    AuthenticationService authenticationService;
 
     public ResponseEntity<String> authenticateUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody UserCredentials credentials) {
-        String token;
         try {
-            token = tokenImplementation.createToken(credentials);
-            return ResponseEntity.ok().body(token);
+            return authenticationService.authenticateUser(credentials);
         } catch (ApiException e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.valueOf(e.getCode()));
+
         }
     }
 

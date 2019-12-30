@@ -63,7 +63,7 @@ paths:
       description: Update the password of an existing user account.
       operationId: updateUser
       consumes:
-        - text/html
+        - application/json
       parameters:
         - name: email
           in: path
@@ -73,7 +73,10 @@ paths:
           in: body
           required: true
           schema:
-            type: string
+            type: object
+            properties:
+              password:
+                type: string
       responses:
         201:
           description: User updated successfully.
