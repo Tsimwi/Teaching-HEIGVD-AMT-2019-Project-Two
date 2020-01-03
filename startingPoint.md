@@ -1,7 +1,7 @@
 ## Environnement de production
 
 1. lancer la commande `./launchSite.sh -f`
-  Lors du premier lancement il va y avoir des erreurs car les bases de données sont pas encore créer
+    Lors du premier lancement il va y avoir des erreurs car les bases de données sont pas encore créer
 
 2. Se connecter sur [localhost:8888](localhost:8888) (mail: amt@amt.ch, password: password)
 
@@ -31,7 +31,7 @@
 
 
 
-## Environnement de code (InteliJ)
+## Environnement de code (IntelliJ)
 
 1. Se rendre dans le dossier `topology/topology-amt-dev/` faire un `docker-compose up --build`
 
@@ -59,5 +59,11 @@
    Puis cliquer sur "auth" puis clique droit sur Databases>Create>Database...
    Genaral -> Database: projectTwo
 
-3.  Lancer intellij puis ouvrer le projet `sagger/full-project`
+3. Lancer intellij puis ouvrer le projet `sagger/full-project`
+
+4. Faire un clean install des modules `auth-api` et `unicorns-api`
+
+5. Puis lancer les applications Spring 
+
+   **ATTENTION** dans les fichiers application.properties il faut que la variable `server.port` ai une valeur différente pour que vous puissiez lancer les deux application en même temps
 
