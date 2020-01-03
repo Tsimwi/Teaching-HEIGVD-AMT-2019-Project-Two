@@ -1,16 +1,69 @@
 version: '3'
 services:
 
-  db:
+  traefik:
+    image: "traefik:v2.0"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+
+  auth_db:
     build: ../../images/postgres
     environment:
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
     volumes:
-      - ./data:/var/lib/postgresql/data
-    container_name: amt_postgres
+      - ./data_auth:/var/lib/postgresql/data
+    container_name: auth_db
 
+  app_db:
+    build: ../../images/postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5433:5432
+    volumes:
+      - ./data_app:/var/lib/postgresql/data
+    container_name: app_db
+
+  auth_backend:
+    build: ../../images/auth_backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth_db:5432/projectTwo
+      POSTGRES_PASSWORD: password
+    container_name: auth_backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth_backend.rule=Host(`localhost`) && PathPrefix(`/auth`)"
+      - "traefik.http.services.auth_backend.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.remove_auth.stripprefix.prefixes=/auth"
+      - "traefik.http.routers.auth_backend.middlewares=remove_auth"
+
+  app_backend:
+    build: ../../images/app_backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://app_db:5432/projectTwo
+      POSTGRES_PASSWORD: password
+    container_name: app_backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app_backend.rule=Host(`localhost`) && PathPrefix(`/app`)"
+      - "traefik.http.services.app_backend.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.remove_app.stripprefix.prefixes=/app"
+      - "traefik.http.routers.app_backend.middlewares=remove_app"
+
+  
   pgadmin:
     build: ../../images/pgadmin
     restart: always
@@ -23,4 +76,5 @@ services:
     volumes:
       - ./dump:/var/lib/pgadmin
     depends_on:
-      - db
+      - app_db
+      - auth_db
