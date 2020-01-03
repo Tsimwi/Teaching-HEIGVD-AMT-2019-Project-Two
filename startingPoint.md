@@ -1,28 +1,63 @@
-lancer le script launchSite
-Lors du premier lancement il va y avoir des erreur car les base de données sont pas encore creer
-De connecter sur localhost:8888 (mail: amt@amt.com, password: password)
-Clique droit sur Servers>Create>server...
-General-> Name: app
-Connexion-> Host: app_db
-Port: 5432
-Username: postgres
-Password: password
-Puis sauvegarder
+## Environnement de production
 
-Clique droit sur Servers>Create>server...
-General-> Name: auth
-Connexion-> Host: auth_db
-Port: 5432
-Username: postgres
-Password: password
-Puis sauvegarder
+1. lancer la commande `./launchSite.sh -f`
+  Lors du premier lancement il va y avoir des erreurs car les bases de données sont pas encore créer
 
-Puis cliquer sur app puis clique droit sur Databases>Create>Database...
-Genaral -> Database: projectTwo
+2. Se connecter sur [localhost:8888](localhost:8888) (mail: amt@amt.ch, password: password)
 
-Puis cliquer sur auth puis clique droit sur Databases>Create>Database...
-Genaral -> Database: projectTwo
+  - Clique droit sur Servers>Create>server...
+    General-> Name: app
+    Connexion-> Host: app_db
+    Port: 5432
+    Username: postgres
+    Password: password
+    Puis sauvegarder
+
+  - Clique droit sur Servers>Create>server...
+    General-> Name: auth
+    Connexion-> Host: auth_db
+    Port: 5432
+    Username: postgres
+    Password: password
+    Puis sauvegarder
+
+  Puis cliquer sur "app" puis clique droit sur Databases>Create>Database...
+  Genaral -> Database: projectTwo
+
+  Puis cliquer sur "auth" puis clique droit sur Databases>Create>Database...
+  Genaral -> Database: projectTwo
+
+3. Lancer la commande `./launchSite.sh`
 
 
-Relancer le script launchSite
+
+## Environnement de code (InteliJ)
+
+1. Se rendre dans le dossier `topology/topology-amt-dev/` faire un `docker-compose up --build`
+
+2. Se connecter sur [localhost:8888](localhost:8888) (mail: amt@amt.ch, password: password)
+
+   - Clique droit sur Servers>Create>server...
+     General-> Name: app
+     Connexion-> Host: app_db
+     Port: 5432
+     Username: postgres
+     Password: password
+     Puis sauvegarder
+
+   - Clique droit sur Servers>Create>server...
+     General-> Name: auth
+     Connexion-> Host: auth_db
+     Port: 5432
+     Username: postgres
+     Password: password
+     Puis sauvegarder
+
+   Puis cliquer sur "app" puis clique droit sur Databases>Create>Database...
+   Genaral -> Database: projectTwo
+
+   Puis cliquer sur "auth" puis clique droit sur Databases>Create>Database...
+   Genaral -> Database: projectTwo
+
+3.  Lancer intellij puis ouvrer le projet `sagger/full-project`
 

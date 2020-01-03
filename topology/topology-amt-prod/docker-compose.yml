@@ -16,13 +16,10 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-
   auth_db:
     build: ../../images/postgres
     environment:
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432:5432
     volumes:
       - ./data_auth:/var/lib/postgresql/data
     container_name: auth_db
@@ -31,8 +28,6 @@ services:
     build: ../../images/postgres
     environment:
       POSTGRES_PASSWORD: password
-    ports:
-      - 5433:5432
     volumes:
       - ./data_app:/var/lib/postgresql/data
     container_name: app_db
@@ -46,9 +41,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.auth_backend.rule=Host(`localhost`) && PathPrefix(`/auth`)"
+      - "traefik.http.routers.auth_backend.entrypoints=web"
       - "traefik.http.services.auth_backend.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.remove_auth.stripprefix.prefixes=/auth"
-      - "traefik.http.routers.auth_backend.middlewares=remove_auth"
+      - "traefik.http.middlewares.addapiprefix.addprefix.prefix=/api"
+      - "traefik.http.routers.auth_backend.middlewares=remove_auth,addapiprefix"
 
   app_backend:
     build: ../../images/app_backend
@@ -59,22 +56,20 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app_backend.rule=Host(`localhost`) && PathPrefix(`/app`)"
+      - "traefik.http.routers.app_backend.entrypoints=web"
       - "traefik.http.services.app_backend.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.remove_app.stripprefix.prefixes=/app"
-      - "traefik.http.routers.app_backend.middlewares=remove_app"
+      - "traefik.http.middlewares.addapiprefix.addprefix.prefix=/api"
+      - "traefik.http.routers.app_backend.middlewares=remove_app,addapiprefix"
 
-  
   pgadmin:
     build: ../../images/pgadmin
-    restart: always
     environment:
       - PGADMIN_DEFAULT_EMAIL=amt@amt.ch
       - PGADMIN_DEFAULT_PASSWORD=password
     ports:
       - 8888:80
     container_name: amt_pgadmin
-    volumes:
-      - ./dump:/var/lib/pgadmin
     depends_on:
       - app_db
       - auth_db
