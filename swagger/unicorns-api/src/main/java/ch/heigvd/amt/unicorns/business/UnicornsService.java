@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -29,7 +30,14 @@ public class UnicornsService {
     }
 
     public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner) throws ApiException {
-        return null;
+        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner);
+        List <SimpleUnicorn> simpleUnicorns = new ArrayList<>();
+
+        for (UnicornEntity unicornEntity : unicorns) {
+            simpleUnicorns.add(toSimpleUnicorn(unicornEntity));
+        }
+
+        return new ResponseEntity<>(simpleUnicorns, HttpStatus.OK);
     }
 
     private UnicornEntity toUnicornEntity(SimpleUnicorn unicorn, String creator) {
@@ -42,7 +50,7 @@ public class UnicornsService {
         return entity;
     }
 
-    private SimpleUnicorn toUnicorn(UnicornEntity entity) {
+    private SimpleUnicorn toSimpleUnicorn(UnicornEntity entity) {
         SimpleUnicorn unicorn = new SimpleUnicorn();
         unicorn.setName(entity.getName());
         unicorn.setColor(entity.getColor());
