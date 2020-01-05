@@ -8,4 +8,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface UnicornRepository extends CrudRepository<UnicornEntity, Long>{
 
+    boolean existsByName(String name);
+
 }

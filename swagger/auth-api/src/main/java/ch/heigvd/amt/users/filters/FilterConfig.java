@@ -1,5 +1,6 @@
 package ch.heigvd.amt.users.filters;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,11 +8,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FilterConfig {
 
-    @Bean
-    public FilterRegistrationBean<TokenFilter> tokenFilterConfig() {
-        FilterRegistrationBean<TokenFilter> registrationBean = new FilterRegistrationBean<>();
+    @Autowired
+    TokenFilter tokenFilter;
 
-        registrationBean.setFilter(new TokenFilter());
+    @Bean
+    public FilterRegistrationBean tokenFilterConfig() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+
+        registrationBean.setFilter(tokenFilter);
         registrationBean.addUrlPatterns("/users/*", "/users");
 
         return registrationBean;

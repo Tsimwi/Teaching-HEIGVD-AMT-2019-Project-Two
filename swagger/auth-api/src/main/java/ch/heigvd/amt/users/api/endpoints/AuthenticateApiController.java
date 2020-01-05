@@ -28,8 +28,6 @@ public class AuthenticateApiController implements AuthenticationApi {
             return authenticationService.authenticateUser(credentials);
         } catch (ApiException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.valueOf(e.getCode()));
-
         }
     }
-
 }

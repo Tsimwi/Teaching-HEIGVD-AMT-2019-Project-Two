@@ -31,18 +31,18 @@ public class UsersApiController implements UsersApi {
     @Autowired
     UsersService usersService;
 
-    public ResponseEntity<Void> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
+    public ResponseEntity<Void> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User user) {
 
-        try{
-             return usersService.addUser(user, (String) httpServletRequest.getAttribute("role"));
-        }catch (ApiException exception){
-            return new ResponseEntity<>( HttpStatus.valueOf(exception.getCode()));
+        try {
+            return usersService.addUser(user, (String) httpServletRequest.getAttribute("role"));
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
 
     }
 
 
-    public ResponseEntity<Void> updateUser(@ApiParam(value = "",required=true) @PathVariable("email") String email,@ApiParam(value = "" ,required=true )  @Valid @RequestBody InlineObject password) {
+    public ResponseEntity<Void> updateUser(@ApiParam(value = "", required = true) @PathVariable("email") String email, @ApiParam(value = "", required = true) @Valid @RequestBody InlineObject password) {
 
 
         String tokenEmail = (String) httpServletRequest.getAttribute("email");
@@ -50,7 +50,7 @@ public class UsersApiController implements UsersApi {
         try {
             return usersService.updateUser(email, tokenEmail, password);
         } catch (ApiException exception) {
-            return new ResponseEntity<>( HttpStatus.valueOf(exception.getCode()));
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
     }
 

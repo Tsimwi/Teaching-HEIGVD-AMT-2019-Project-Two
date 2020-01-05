@@ -7,6 +7,14 @@ host: localhost:8080
 basePath: /api
 schemes:
   - http
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
+security:
+  - Bearer: []
 
 paths:
   /unicorns:
@@ -16,10 +24,6 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: unicorn
           in: body
           required: true
@@ -36,11 +40,6 @@ paths:
       operationId: getUnicorns
       produces:
         - application/json
-      parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
       responses:
         200:
           description: success
@@ -58,10 +57,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: name
           in: path
           required: true
@@ -87,10 +82,6 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: name
           in: path
           required: true
@@ -112,10 +103,6 @@ paths:
       description: Delete a unicorn.
       operationId: deleteUnicorn
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: name
           in: path
           required: true
@@ -136,10 +123,6 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: magic
           in: body
           required: true
@@ -156,11 +139,6 @@ paths:
       operationId: getMagics
       produces:
         - application/json
-      parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
       responses:
         200:
           description: success
@@ -178,10 +156,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: name
           in: path
           required: true
@@ -207,10 +181,6 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: name
           in: path
           required: true
@@ -232,10 +202,6 @@ paths:
       description: Delete a magic.
       operationId: deleteMagic
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: name
           in: path
           required: true
@@ -255,10 +221,6 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
         - name: operation
           in: body
           required: true

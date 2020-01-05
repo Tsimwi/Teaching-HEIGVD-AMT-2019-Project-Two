@@ -41,7 +41,7 @@ public class TokenImplementation implements ITokenImplementation {
         Algorithm algorithmHS = Algorithm.HMAC256("secret");
         Date now = new Date();
 
-        /* 5 hour of validation */
+        /* 5 hours of validity */
         Date expiration = new Date(now.getTime() + (5 * 3600 * 1000));
         return JWT.create()
                 .withSubject(userEntity.getMail())
@@ -71,10 +71,10 @@ public class TokenImplementation implements ITokenImplementation {
     public String getTokenFromHeaderAuthorization(String token) throws ApiException {
 
         if (token == null) {
-            throw new ApiException(401, "Header Authorization is missing");
+            throw new ApiException(401, "Authorization header is missing");
         }
         if (!token.startsWith("Bearer")) {
-            throw new ApiException(401, "Header Authorization is not well formed");
+            throw new ApiException(401, "Authorization head is malformed");
         }
         return token.substring(7);
     }
