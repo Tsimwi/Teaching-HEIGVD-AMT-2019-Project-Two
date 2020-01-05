@@ -1,6 +1,7 @@
 package ch.heigvd.amt.unicorns.api.endpoints;
 
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
+import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.business.UnicornsService;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.api.UnicornsApi;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -25,24 +27,32 @@ public class UnicornsApiController implements UnicornsApi {
     @Autowired
     UnicornsService unicornsService;
 
-    public ResponseEntity<Void> addUnicorn(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Unicorn unicorn) {
+    @Autowired
+    HttpServletRequest httpServletRequest;
+
+    public ResponseEntity<Void> addUnicorn(@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleUnicorn unicorn) {
         try {
-            return unicornsService.addUnicorn(unicorn);
+            return unicornsService.addUnicorn(unicorn, (String) httpServletRequest.getAttribute("email"));
         } catch (ApiException exception) {
             return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
     }
 
-
-    public ResponseEntity<List<Unicorn>> getUnicorns() {
+    public ResponseEntity<List<SimpleUnicorn>> getUnicorns() {
+        try {
+            return unicornsService.getUnicorns((String) httpServletRequest.getAttribute("email"));
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
 
     }
+
 
     public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView) {
         return null;
     }
 
-    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Unicorn unicorn) {
+    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleUnicorn unicorn) {
         return null;
     }
 

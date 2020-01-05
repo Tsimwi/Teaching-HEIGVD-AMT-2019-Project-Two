@@ -28,7 +28,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Unicorn'
+            $ref: '#/definitions/SimpleUnicorn'
       responses:
         201:
           description: Unicorn successfully created.
@@ -46,7 +46,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Unicorn'
+              $ref: '#/definitions/SimpleUnicorn'
         401:
           description: Invalid or missing token.
 
@@ -90,7 +90,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Unicorn'
+            $ref: '#/definitions/SimpleUnicorn'
       responses:
         200:
           description: Unicorn successfully updated.
@@ -127,7 +127,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Magic'
+            $ref: '#/definitions/SimpleMagic'
       responses:
         201:
           description: Magic successfully created.
@@ -145,7 +145,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Magic'
+              $ref: '#/definitions/SimpleMagic'
         401:
           description: Invalid or missing token.
 
@@ -189,7 +189,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Magic'
+            $ref: '#/definitions/SimpleMagic'
       responses:
         200:
           description: Magic succesfully deleted.
@@ -234,6 +234,28 @@ paths:
 
 
 definitions:
+  SimpleUnicorn:
+    type: object
+    properties:
+      name:
+        type: string
+      color:
+        type: string
+      hasWings:
+        type: boolean
+      speed:
+        type: integer
+
+  SimpleMagic:
+    type: object
+    properties:
+      name:
+        type: string
+      spell:
+        type: string
+      power:
+        type: integer
+
   Unicorn:
     type: object
     properties:
