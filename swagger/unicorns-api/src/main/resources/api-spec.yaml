@@ -42,6 +42,17 @@ paths:
       operationId: getUnicorns
       produces:
         - application/json
+      parameters:
+        - name: pageNumber
+          in: query
+          default: 1
+          required: false
+          type: number
+        - name: numberPerPage
+          in: query
+          default: 10
+          required: false
+          type: number
       responses:
         200:
           description: success
@@ -68,6 +79,16 @@ paths:
           default: false
           required: false
           type: boolean
+        - name: pageNumber
+          in: query
+          default: 1
+          required: false
+          type: number
+        - name: numberPerPage
+          in: query
+          default: 10
+          required: false
+          type: number
       responses:
         200:
           description: success
@@ -147,6 +168,17 @@ paths:
       operationId: getMagics
       produces:
         - application/json
+      parameters:
+        - name: pageNumber
+          in: query
+          default: 1
+          required: false
+          type: number
+        - name: numberPerPage
+          in: query
+          default: 10
+          required: false
+          type: number
       responses:
         200:
           description: success
@@ -173,6 +205,16 @@ paths:
           default: false
           required: false
           type: boolean
+        - name: pageNumber
+          in: query
+          default: 1
+          required: false
+          type: number
+        - name: numberPerPage
+          in: query
+          default: 10
+          required: false
+          type: number
       responses:
         200:
           description: success
