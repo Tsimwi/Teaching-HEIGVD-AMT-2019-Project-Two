@@ -27,14 +27,11 @@ paths:
           schema:
             $ref: '#/definitions/UserCredentials'
       responses:
-        '200':
+        200:
           description: success
           schema:
+            description: JWT Token
             type: string
-          headers:
-            Authorization:
-              type: string
-              description: JWT token
         400:
           description: Invalid email/password supplied.
 
@@ -55,6 +52,13 @@ paths:
       responses:
         201:
           description: created
+        401:
+          description: Invalid token
+        403:
+          description: Not an administrator
+        409:
+          description: User already exist
+
 
   /users/{email}:
     patch:
@@ -79,7 +83,11 @@ paths:
                 type: string
       responses:
         201:
-          description: User updated successfully.
+          description: User updated successfully
+        401:
+          description: Invalid token
+        403:
+          description: Update not allowed
         404:
           description: User not found.
 

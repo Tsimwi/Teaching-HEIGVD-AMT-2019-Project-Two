@@ -33,7 +33,7 @@ public class UsersService {
                 throw new ApiException(HttpStatus.CONFLICT.value(), "");
             }
         } else {
-            throw new ApiException(HttpStatus.UNAUTHORIZED.value(), "");
+            throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
         }
     }
 
@@ -49,7 +49,7 @@ public class UsersService {
             return new ResponseEntity<>(null, HttpStatus.CREATED);
 
         }else {
-            throw new ApiException(HttpStatus.UNAUTHORIZED.value(), "");
+            throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
         }
     }
 

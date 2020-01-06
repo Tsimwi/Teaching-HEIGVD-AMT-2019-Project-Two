@@ -36,7 +36,7 @@ public class SwaggerDocumentationConfig {
     @Bean
     public Docket customImplementation() {
         List<SecurityScheme> schemeList = new ArrayList<>();
-        schemeList.add(new ApiKey(HttpHeaders.AUTHORIZATION, "Authorization", "header"));
+        schemeList.add(new ApiKey("Bearer", "Authorization", "header"));
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ch.heigvd.amt.users.api"))
