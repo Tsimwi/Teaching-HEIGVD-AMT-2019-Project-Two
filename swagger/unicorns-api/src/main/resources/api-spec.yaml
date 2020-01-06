@@ -75,6 +75,8 @@ paths:
             $ref: '#/definitions/Unicorn'
         401:
           description: Invalid or missing token.
+        403:
+          description: Forbidden.
         404:
           description: Unicorn not found.
 
@@ -98,6 +100,8 @@ paths:
           description: Unicorn successfully updated.
         401:
           description: Invalid or missing token.
+        403:
+          description: Forbidden.
         404:
           description: Unicorn not found.
 
@@ -114,6 +118,8 @@ paths:
           description: Unicorn successfully deleted.
         401:
           description: Invalid or missing token.
+        403:
+          description: Forbidden.
         404:
           description: Unicorn not found.
 
@@ -174,6 +180,8 @@ paths:
             $ref: '#/definitions/Magic'
         401:
           description: Invalid or missing token.
+        403:
+          description: Forbidden.
         404:
           description: Magic not found.
 
@@ -197,6 +205,8 @@ paths:
           description: Magic succesfully deleted.
         401:
           description: Invalid or missing token.
+        403:
+          description: Forbidden.
         404:
           description: Magic not found.
 
@@ -213,10 +223,12 @@ paths:
           description: Magic successfully deleted.
         401:
           description: Invalid or missing token.
+        403:
+          description: Forbidden.
         404:
           description: Magic not found.
 
-  /magicornrelationship:
+  /magicorn:
     post:
       description: Add/remove a relation between a unicorn and a magic.
       operationId: changeMagicorn
@@ -227,7 +239,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/MagicornOperation'
+            $ref: '#/definitions/Magicorn'
       responses:
         201:
           description: Successfull operation.
@@ -288,7 +300,7 @@ definitions:
         items:
           $ref: '#/definitions/Unicorn'
 
-  MagicornOperation:
+  Magicorn:
     type: object
     properties:
       operation:

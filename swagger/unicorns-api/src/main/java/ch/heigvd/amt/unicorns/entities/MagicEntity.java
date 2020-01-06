@@ -12,6 +12,7 @@ public class MagicEntity implements Serializable {
 
     private int power;
     private String spell;
+    private String entityCreator;
 
     @ManyToMany(mappedBy = "magicEntities")
     private List<UnicornEntity> unicornEntities;
@@ -39,5 +40,13 @@ public class MagicEntity implements Serializable {
 
     public void setSpell(String spell) {
         this.spell = spell;
+    }
+
+    public String getEntityCreator() {
+        return entityCreator;
+    }
+
+    public void setEntityCreator(String entityCreator) {
+        this.entityCreator = entityCreator;
     }
 }

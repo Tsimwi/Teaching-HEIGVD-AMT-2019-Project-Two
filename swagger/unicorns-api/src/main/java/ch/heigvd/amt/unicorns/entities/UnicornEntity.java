@@ -15,7 +15,7 @@ public class UnicornEntity implements Serializable {
     private int speed;
     private String entityCreator;
 
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.LAZY)
     private List<MagicEntity> magicEntities;
 
     public String getName() {
@@ -56,5 +56,9 @@ public class UnicornEntity implements Serializable {
 
     public void setEntityCreator(String entityCreator) {
         this.entityCreator = entityCreator;
+    }
+
+    public List<MagicEntity> getMagicEntities() {
+        return magicEntities;
     }
 }

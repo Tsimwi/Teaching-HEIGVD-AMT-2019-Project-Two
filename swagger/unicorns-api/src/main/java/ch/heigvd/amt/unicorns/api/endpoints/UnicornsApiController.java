@@ -3,7 +3,6 @@ package ch.heigvd.amt.unicorns.api.endpoints;
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.business.UnicornsService;
-import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.api.UnicornsApi;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
 import io.swagger.annotations.ApiParam;
@@ -44,12 +43,15 @@ public class UnicornsApiController implements UnicornsApi {
         } catch (ApiException exception) {
             return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
-
     }
 
 
     public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView) {
-        return null;
+        try {
+            return unicornsService.getUnicornByName(name, (String) httpServletRequest.getAttribute("email"), fullView);
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
     }
 
     public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleUnicorn unicorn) {
