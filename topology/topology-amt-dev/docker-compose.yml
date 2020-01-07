@@ -2,7 +2,7 @@ version: '3'
 services:
 
   auth_db:
-    build: ../../images/postgres
+    build: ../../images/auth_db
     environment:
       POSTGRES_PASSWORD: password
     ports:
@@ -12,7 +12,7 @@ services:
     container_name: auth_db
 
   app_db:
-    build: ../../images/postgres
+    build: ../../images/app_db
     environment:
       POSTGRES_PASSWORD: password
     ports:
