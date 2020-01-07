@@ -1,8 +1,10 @@
 package ch.heigvd.amt.unicorns.api.endpoints;
 
 import ch.heigvd.amt.unicorns.api.MagicsApi;
+import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
+import ch.heigvd.amt.unicorns.business.MagicsService;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import io.swagger.annotations.ApiParam;
@@ -14,11 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,42 +31,41 @@ import java.util.List;
 public class MagicsApiController implements MagicsApi {
 
     @Autowired
-    MagicRepository magicRepository;
+    MagicsService magicsService;
 
-    public ResponseEntity<Void> addMagic(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization, @ApiParam(value = "" ,required=true )  @Valid @RequestBody Magic magic) {
-        MagicEntity newMagicEntity = toMagicEntity(magic);
-        magicRepository.save(newMagicEntity);
+    @Autowired
+    HttpServletRequest httpServletRequest;
 
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
-    }
-
-
-    public ResponseEntity<List<SimpleMagic>> getMagics(@ApiParam(value = "", defaultValue = "1.0d") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1.0d") BigDecimal pageNumber, @ApiParam(value = "", defaultValue = "10.0d") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10.0d") BigDecimal numberPerPage) {
-        List<Magic> magics = new ArrayList<>();
-        for (MagicEntity magicEntity : magicRepository.findAll()) {
-            magics.add(toMagic(magicEntity));
+    public ResponseEntity<Void> addMagic(@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleMagic magic) {
+        try {
+            return magicsService.addMagic(magic, (String) httpServletRequest.getAttribute("email"));
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
-        /*
-        Magic staticMagic = new Magic();
-        staticMagic.setColour("red");
-        staticMagic.setKind("banana");
-        staticMagic.setSize("medium");
-        List<Magic> magics = new ArrayList<>();
-        magics.add(staticMagic);
-        */
-        return null;
-//        return ResponseEntity.ok(magics);
     }
 
-    public ResponseEntity<Magic> getMagicByName(@ApiParam(value = "",required=true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView, @ApiParam(value = "", defaultValue = "1.0d") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1.0d") BigDecimal pageNumber, @ApiParam(value = "", defaultValue = "10.0d") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10.0d") BigDecimal numberPerPage) {
+
+    public ResponseEntity<List<SimpleMagic>> getMagics(@Min(1)@ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,@Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10") Integer numberPerPage) {
+        try {
+            return magicsService.getMagics((String) httpServletRequest.getAttribute("email"), pageNumber, numberPerPage);
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
+    }
+
+    public ResponseEntity<Magic> getMagicByName(@ApiParam(value = "",required=true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView, @Min(1)@ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber, @Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10") Integer numberPerPage) {
+        try {
+            return magicsService.getMagicByName(name, (String) httpServletRequest.getAttribute("email"), fullView, pageNumber, numberPerPage);
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
+    }
+
+    public ResponseEntity<Void> deleteMagic(@ApiParam(value = "",required=true) @PathVariable("name") String name) {
         return null;
     }
 
-    public ResponseEntity<Void> deleteMagic(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name) {
-        return null;
-    }
-
-    public ResponseEntity<Void> updateMagic(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Magic magic) {
+    public ResponseEntity<Void> updateMagic(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleMagic magic) {
         return null;
     }
 

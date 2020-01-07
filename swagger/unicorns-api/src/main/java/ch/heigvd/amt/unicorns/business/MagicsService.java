@@ -3,12 +3,12 @@ package ch.heigvd.amt.unicorns.business;
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
-import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -21,19 +21,80 @@ public class MagicsService {
     @Autowired
     MagicRepository magicRepository;
 
-    public ResponseEntity<Void> addUnicorn(SimpleUnicorn unicorn, String creator) throws ApiException {
-        return null;
+    /**
+     * Add a new magic in the database
+     * @param magic The magic to add
+     * @param creator The user creating the magic
+     * @return A response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<Void> addMagic(SimpleMagic magic, String creator) throws ApiException {
+        MagicEntity newMagicEntity = toMagicEntity(magic, creator);
+
+        if (!magicRepository.existsByName(magic.getName())) {
+            magicRepository.save(newMagicEntity);
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
+        } else {
+            throw new ApiException(HttpStatus.CONFLICT.value(), "");
+        }
     }
 
-    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner) throws ApiException {
-        return null;
+    /**
+     * Get the list of magics owned by the token bearer
+     * @param owner The user that created the magics
+     * @param pageNumber
+     * @param numberPerPage
+     * @return The result and the response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<List<SimpleMagic>> getMagics(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
+        //TODO utiliser les int
+        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner);
+        List<SimpleMagic> simpleMagics = new ArrayList<>();
+
+        for (MagicEntity magicEntity : magics) {
+            simpleMagics.add(toSimpleMagic(magicEntity));
+        }
+
+        return new ResponseEntity<>(simpleMagics, HttpStatus.OK);
     }
 
-    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView) throws ApiException {
-        return null;
+    /**
+     * Get a magic by its name
+     * @param name The name of the magic
+     * @param owner The owner of the magic
+     * @param fullView A boolean to specify if we want to see all the unicorns related to the magic or not
+     * @return The result and the response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<Magic> getMagicByName(String name, String owner, boolean fullView, Integer pageNumber, Integer numberPerPage) throws ApiException {
+        //TODO utiliser les int
+        MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
+        if (magicEntity != null) {
+            if (magicEntity.getEntityCreator().equals(owner)) {
+                Magic fetchedMagic;
+                if (fullView) {
+                    fetchedMagic = toMagic(magicEntity, magicEntity.getUnicornEntities());
+                } else {
+                    fetchedMagic = toMagic(magicEntity, null);
+                }
+                return new ResponseEntity<>(fetchedMagic, HttpStatus.OK);
+
+            } else {
+                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+            }
+        } else {
+            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }
     }
 
 
+    /**
+     * Convert a simple magic into a magic entity
+     * @param magic The simple magic
+     * @param creator The creator of the magic
+     * @return A magic entity
+     */
     private MagicEntity toMagicEntity(SimpleMagic magic, String creator) {
         MagicEntity entity = new MagicEntity();
         entity.setName(magic.getName());
@@ -43,6 +104,12 @@ public class MagicsService {
         return entity;
     }
 
+    /**
+     * Convert a magic entity into a magic
+     * @param entity The magic entity
+     * @param unicornEntities The unicorn entities related to the magic
+     * @return A magic object
+     */
     private Magic toMagic(MagicEntity entity, List<UnicornEntity> unicornEntities) {
         Magic magic = new Magic();
         magic.setName(entity.getName());
@@ -63,6 +130,11 @@ public class MagicsService {
         return magic;
     }
 
+    /**
+     * Convert a magic entity into a simple magic
+     * @param entity The magic entity
+     * @return A simple magic object
+     */
     private SimpleMagic toSimpleMagic(MagicEntity entity) {
         SimpleMagic magic = new SimpleMagic();
         magic.setName(entity.getName());

@@ -42,10 +42,13 @@ public class UnicornsService {
     /**
      * Get the list of unicorns owned by the token bearer
      * @param owner The user that created the unicorns
+     * @param pageNumber
+     * @param numberPerPage
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner) throws ApiException {
+    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
+        //TODO utiliser les int
         List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner);
         List <SimpleUnicorn> simpleUnicorns = new ArrayList<>();
 
@@ -62,9 +65,10 @@ public class UnicornsService {
      * @param owner The owner of the unicorn
      * @param fullView A boolean to specify if we want to see all the magics related to the unicorn or not
      * @return The result and the response code related to the result
-     * @throws ApiException
+     * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView) throws ApiException {
+    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView, Integer pageNumber, Integer numberPerPage) throws ApiException {
+        //TODO utiliser les int
         UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
         if (unicornEntity != null) {
             if (unicornEntity.getEntityCreator().equals(owner)) {

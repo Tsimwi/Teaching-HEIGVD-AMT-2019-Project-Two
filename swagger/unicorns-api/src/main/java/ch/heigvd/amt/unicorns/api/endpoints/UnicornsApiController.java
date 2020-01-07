@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-07-26T19:36:34.802Z")
@@ -38,18 +39,18 @@ public class UnicornsApiController implements UnicornsApi {
         }
     }
 
-    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(@ApiParam(value = "", defaultValue = "1.0d") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1.0d") BigDecimal pageNumber, @ApiParam(value = "", defaultValue = "10.0d") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10.0d") BigDecimal numberPerPage) {
+    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(@Min(1)@ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,@Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10") Integer numberPerPage) {
         try {
-            return unicornsService.getUnicorns((String) httpServletRequest.getAttribute("email"));
+            return unicornsService.getUnicorns((String) httpServletRequest.getAttribute("email"), pageNumber, numberPerPage);
         } catch (ApiException exception) {
             return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
     }
 
 
-    public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView,@ApiParam(value = "", defaultValue = "1.0d") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1.0d") BigDecimal pageNumber,@ApiParam(value = "", defaultValue = "10.0d") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10.0d") BigDecimal numberPerPage) {
+    public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "",required=true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView, @Min(1)@ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber, @Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10") Integer numberPerPage) {
         try {
-            return unicornsService.getUnicornByName(name, (String) httpServletRequest.getAttribute("email"), fullView);
+            return unicornsService.getUnicornByName(name, (String) httpServletRequest.getAttribute("email"), fullView, pageNumber, numberPerPage);
         } catch (ApiException exception) {
             return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }

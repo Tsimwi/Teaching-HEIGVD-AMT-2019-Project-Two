@@ -49,4 +49,8 @@ public class MagicEntity implements Serializable {
     public void setEntityCreator(String entityCreator) {
         this.entityCreator = entityCreator;
     }
+
+    public List<UnicornEntity> getUnicornEntities() {
+        return unicornEntities;
+    }
 }

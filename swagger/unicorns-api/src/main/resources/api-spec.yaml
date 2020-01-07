@@ -47,12 +47,15 @@ paths:
           in: query
           default: 1
           required: false
-          type: number
+          type: integer
+          minimum: 1
         - name: numberPerPage
           in: query
           default: 10
           required: false
-          type: number
+          type: integer
+          minimum: 1
+          maximum: 50
       responses:
         200:
           description: success
@@ -83,12 +86,15 @@ paths:
           in: query
           default: 1
           required: false
-          type: number
+          type: integer
+          minimum: 1
         - name: numberPerPage
           in: query
           default: 10
           required: false
-          type: number
+          type: integer
+          minimum: 1
+          maximum: 50
       responses:
         200:
           description: success
@@ -173,12 +179,15 @@ paths:
           in: query
           default: 1
           required: false
-          type: number
+          type: integer
+          minimum: 1
         - name: numberPerPage
           in: query
           default: 10
           required: false
-          type: number
+          type: integer
+          minimum: 1
+          maximum: 50
       responses:
         200:
           description: success
@@ -209,12 +218,15 @@ paths:
           in: query
           default: 1
           required: false
-          type: number
+          type: integer
+          minimum: 1
         - name: numberPerPage
           in: query
           default: 10
           required: false
-          type: number
+          type: integer
+          minimum: 1
+          maximum: 50
       responses:
         200:
           description: success
