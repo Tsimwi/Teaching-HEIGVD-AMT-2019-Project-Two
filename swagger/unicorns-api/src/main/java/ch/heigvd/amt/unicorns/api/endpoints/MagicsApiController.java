@@ -2,6 +2,7 @@ package ch.heigvd.amt.unicorns.api.endpoints;
 
 import ch.heigvd.amt.unicorns.api.MagicsApi;
 import ch.heigvd.amt.unicorns.api.model.Magic;
+import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import io.swagger.annotations.ApiParam;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class MagicsApiController implements MagicsApi {
     }
 
 
-    public ResponseEntity<List<Magic>> getMagics(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization) {
+    public ResponseEntity<List<SimpleMagic>> getMagics(@ApiParam(value = "", defaultValue = "1.0d") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1.0d") BigDecimal pageNumber, @ApiParam(value = "", defaultValue = "10.0d") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10.0d") BigDecimal numberPerPage) {
         List<Magic> magics = new ArrayList<>();
         for (MagicEntity magicEntity : magicRepository.findAll()) {
             magics.add(toMagic(magicEntity));
@@ -49,10 +51,11 @@ public class MagicsApiController implements MagicsApi {
         List<Magic> magics = new ArrayList<>();
         magics.add(staticMagic);
         */
-        return ResponseEntity.ok(magics);
+        return null;
+//        return ResponseEntity.ok(magics);
     }
 
-    public ResponseEntity<Magic> getMagicByName(@ApiParam(value = "" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView) {
+    public ResponseEntity<Magic> getMagicByName(@ApiParam(value = "",required=true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView, @ApiParam(value = "", defaultValue = "1.0d") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1.0d") BigDecimal pageNumber, @ApiParam(value = "", defaultValue = "10.0d") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10.0d") BigDecimal numberPerPage) {
         return null;
     }
 
