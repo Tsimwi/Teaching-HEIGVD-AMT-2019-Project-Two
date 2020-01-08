@@ -107,7 +107,7 @@ paths:
         404:
           description: Unicorn not found.
 
-    patch:
+    put:
       description: Update a unicorn.
       operationId: updateUnicorn
       consumes:
@@ -239,7 +239,7 @@ paths:
         404:
           description: Magic not found.
 
-    patch:
+    put:
       description: Update a magic.
       operationId: updateMagic
       consumes:

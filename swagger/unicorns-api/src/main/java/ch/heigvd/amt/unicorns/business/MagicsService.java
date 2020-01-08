@@ -64,6 +64,8 @@ public class MagicsService {
      * @param name The name of the magic
      * @param owner The owner of the magic
      * @param fullView A boolean to specify if we want to see all the unicorns related to the magic or not
+     * @param pageNumber The request current page number
+     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
@@ -80,6 +82,30 @@ public class MagicsService {
                 }
                 return new ResponseEntity<>(fetchedMagic, HttpStatus.OK);
 
+            } else {
+                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+            }
+        } else {
+            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }
+    }
+
+    /**
+     * Update an existing magic
+     * @param name The name of the magic
+     * @param magic The new magic object
+     * @param owner The owner of the magic
+     * @return A response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<Void> updateMagic(String name, SimpleMagic magic, String owner) throws ApiException {
+        MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
+        if (magicEntity != null) {
+            if (magicEntity.getEntityCreator().equals(owner)) {
+                magicEntity.setPower(magic.getPower());
+                magicEntity.setSpell(magic.getSpell());
+                magicRepository.save(magicEntity);
+                return new ResponseEntity<>(null, HttpStatus.CREATED);
             } else {
                 throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
             }

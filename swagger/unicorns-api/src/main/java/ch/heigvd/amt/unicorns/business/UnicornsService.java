@@ -7,6 +7,7 @@ import ch.heigvd.amt.unicorns.api.model.Unicorn;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.UnicornRepository;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,8 @@ public class UnicornsService {
     /**
      * Get the list of unicorns owned by the token bearer
      * @param owner The user that created the unicorns
-     * @param pageNumber
-     * @param numberPerPage
+     * @param pageNumber The request current page number
+     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
@@ -64,6 +65,8 @@ public class UnicornsService {
      * @param name The name of the unicorn
      * @param owner The owner of the unicorn
      * @param fullView A boolean to specify if we want to see all the magics related to the unicorn or not
+     * @param pageNumber The request current page number
+     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
@@ -80,6 +83,31 @@ public class UnicornsService {
                 }
                 return new ResponseEntity<>(fetchedUnicorn, HttpStatus.OK);
 
+            } else {
+                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+            }
+        } else {
+            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }
+    }
+
+    /**
+     * Update an existing unicorn
+     * @param name The name of the unicorn
+     * @param unicorn The new unicorn object
+     * @param owner The owner of the unicorn
+     * @return A response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<Void> updateUnicorn(String name, SimpleUnicorn unicorn, String owner) throws ApiException {
+        UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
+        if (unicornEntity != null) {
+            if (unicornEntity.getEntityCreator().equals(owner)) {
+                unicornEntity.setColor(unicorn.getColor());
+                unicornEntity.setHasWings(unicorn.getHasWings());
+                unicornEntity.setSpeed(unicorn.getSpeed());
+                unicornRepository.save(unicornEntity);
+                return new ResponseEntity<>(null, HttpStatus.CREATED);
             } else {
                 throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
             }

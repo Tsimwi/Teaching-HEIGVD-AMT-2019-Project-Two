@@ -57,7 +57,11 @@ public class UnicornsApiController implements UnicornsApi {
     }
 
     public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleUnicorn unicorn) {
-        return null;
+        try {
+            return unicornsService.updateUnicorn(name, unicorn, (String) httpServletRequest.getAttribute("email"));
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
     }
 
     public ResponseEntity<Void> deleteUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name) {
