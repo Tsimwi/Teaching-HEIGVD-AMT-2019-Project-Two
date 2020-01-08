@@ -107,7 +107,28 @@ public class UnicornsService {
                 unicornEntity.setHasWings(unicorn.getHasWings());
                 unicornEntity.setSpeed(unicorn.getSpeed());
                 unicornRepository.save(unicornEntity);
-                return new ResponseEntity<>(null, HttpStatus.CREATED);
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            } else {
+                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+            }
+        } else {
+            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }
+    }
+
+    /**
+     * Delete a unicorn
+     * @param name The name of the unicorn
+     * @param owner The owner of the unicorn
+     * @return A response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<Void> deleteUnicorn(String name, String owner) throws ApiException {
+        UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
+        if (unicornEntity != null) {
+            if (unicornEntity.getEntityCreator().equals(owner)) {
+                unicornRepository.deleteByName(name);
+                return new ResponseEntity<>(null, HttpStatus.OK);
             } else {
                 throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
             }

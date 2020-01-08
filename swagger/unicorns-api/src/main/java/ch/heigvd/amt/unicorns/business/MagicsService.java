@@ -114,6 +114,27 @@ public class MagicsService {
         }
     }
 
+    /**
+     * Delete a magic
+     * @param name The name of the magic
+     * @param owner The owner of the magic
+     * @return A response code related to the result
+     * @throws ApiException An exception in case of error during the process
+     */
+    public ResponseEntity<Void> deleteMagic(String name, String owner) throws ApiException {
+        MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
+        if (magicEntity != null) {
+            if (magicEntity.getEntityCreator().equals(owner)) {
+                magicRepository.deleteByName(name);
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            } else {
+                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+            }
+        } else {
+            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }
+    }
+
 
     /**
      * Convert a simple magic into a magic entity

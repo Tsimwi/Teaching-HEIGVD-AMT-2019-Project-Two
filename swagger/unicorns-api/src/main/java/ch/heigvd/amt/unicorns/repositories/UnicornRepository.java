@@ -12,5 +12,5 @@ public interface UnicornRepository extends PagingAndSortingRepository<UnicornEnt
     boolean existsByName(String name);
     List<UnicornEntity> getUnicornEntitiesByEntityCreator(String entity_creator);
     UnicornEntity getUnicornEntityByName(String name);
-
+    boolean deleteByName(String name);
 }

@@ -70,7 +70,11 @@ public class MagicsApiController implements MagicsApi {
     }
 
     public ResponseEntity<Void> deleteMagic(@ApiParam(value = "",required=true) @PathVariable("name") String name) {
-        return null;
+        try {
+            return magicsService.deleteMagic(name, (String) httpServletRequest.getAttribute("email"));
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
     }
 
     private MagicEntity toMagicEntity(Magic magic) {

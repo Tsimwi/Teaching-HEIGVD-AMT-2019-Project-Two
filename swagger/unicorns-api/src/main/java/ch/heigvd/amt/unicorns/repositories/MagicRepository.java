@@ -12,4 +12,5 @@ public interface MagicRepository extends PagingAndSortingRepository<MagicEntity,
     boolean existsByName(String name);
     List<MagicEntity> getMagicEntitiesByEntityCreator(String entity_creator);
     MagicEntity getMagicEntityByName(String name);
+    boolean deleteByName(String name);
 }
