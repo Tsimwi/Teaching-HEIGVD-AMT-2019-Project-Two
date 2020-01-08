@@ -365,3 +365,7 @@ definitions:
         type: string
       magic:
         type: string
+    example:
+      operation: "link/unlink"
+      unicorn: "Pegasus"
+      magic: "Fire"
