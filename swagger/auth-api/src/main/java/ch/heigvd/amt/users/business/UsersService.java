@@ -25,8 +25,7 @@ public class UsersService {
     public ResponseEntity<Void> addUser(User user, String role) throws ApiException {
         if (role.equals("Administrator")) {
             UserEntity newUserEntity = toUserEntity(user);
-            UserEntity userInDb = userRepository.findByMail(user.getEmail());
-            if (userInDb == null){
+            if (!userRepository.existsByMail(user.getEmail())){
                 userRepository.save(newUserEntity);
                 return new ResponseEntity<>(null, HttpStatus.CREATED);
             }else {

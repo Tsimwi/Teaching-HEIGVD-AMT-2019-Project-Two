@@ -30,14 +30,16 @@ public class UsersSteps {
     User user;
     InlineObject password;
     private String token;
+    UUID uuid;
 
 
     public UsersSteps(Environment environment) {
         this.environment = environment;
         this.api = environment.getApi();
         this.userToken = new ch.heigvd.amt.users.api.dto.User();
-        userToken.setEmail("remi.poulard@heig-vd.ch");
+        userToken.setEmail("admin@admin.ch");
         userToken.setRole("Administrator");
+        uuid = UUID.randomUUID();
 
     }
 
@@ -54,8 +56,8 @@ public class UsersSteps {
     private String createFakeToken(){
         Algorithm algorithmHS = Algorithm.HMAC256("secret");
         Date now = new Date();
-        /* 1 hour of validation */
-        Date expiration = new Date(now.getTime() + 3600000);
+        /* 5 hour of validation */
+        Date expiration = new Date(now.getTime() + 3600000 * 5);
         return JWT.create()
                 .withSubject(userToken.getEmail())
                 .withIssuer("auth-server")
@@ -67,10 +69,10 @@ public class UsersSteps {
 
     @Given("^I have a user payload and a JWT token$")
     public void iHaveAUserPayloadAndAJWTToken() {
-        UUID uuid = UUID.randomUUID();
+
 
         this.user = new ch.heigvd.amt.users.api.dto.User();
-        this.user.setEmail(uuid+"@test.com");
+        this.user.setEmail(this.uuid + "@test.com");
         this.user.setFirstName("FirstName");
         this.user.setLastName("Test");
         this.user.setPassword("1234");
@@ -82,7 +84,7 @@ public class UsersSteps {
     @When("^I POST it to the /users endpoint$")
     public void iPOSTItToTheUsersEndpoint() {
         try {
-            api.getApiClient().addDefaultHeader("Authorization", "Bearer " + token);
+            api.getApiClient().setApiKey("Bearer " + token);
             environment.setLastApiResponse(api.addUserWithHttpInfo(user));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
@@ -98,12 +100,12 @@ public class UsersSteps {
     @Given("^I have a password payload and a JWT token$")
     public void iHaveAPasswordPayloadAndAJWTToken() {
         this.password = new ch.heigvd.amt.users.api.dto.InlineObject();
-        this.password.setPassword("jeujeujeu");
+        this.password.setPassword("test");
         this.token = createFakeToken();
 
     }
 
-    @When("^I PATCH it to the /users/\"([^\"]*)\" endpoint$")
+    @When("^I PATCH it to the /users/([^\"]*) endpoint$")
     public void iPATCHItToTheUsersEndpoint(String arg0) throws Throwable {
         try {
             api.getApiClient().setApiKey("Bearer " + token);
@@ -140,7 +142,7 @@ public class UsersSteps {
     public void iHaveAUserPayloadThatAlreadyExistAndAJWTToken() {
 
         this.user = new ch.heigvd.amt.users.api.dto.User();
-        this.user.setEmail("remi.poulard@heig-vd.ch");
+        this.user.setEmail("test");
         this.user.setFirstName("FirstName");
         this.user.setLastName("Test");
         this.user.setPassword("1234");
@@ -152,14 +154,14 @@ public class UsersSteps {
     public void iHaveAPasswordPayloadAndAJWTTokenWithABadEmail() {
         this.password = new ch.heigvd.amt.users.api.dto.InlineObject();
         this.password.setPassword("jeujeujeu");
-        this.userToken.setEmail("wrongEmail");
+        this.userToken.setEmail("dd");
         this.token = createFakeToken();
     }
 
     @Given("^I have a password payload$")
     public void iHaveAPasswordPayload() {
         this.password = new ch.heigvd.amt.users.api.dto.InlineObject();
-        this.password.setPassword("jeujeujeu");
+        this.password.setPassword("admin");
         this.token = "";
     }
 }
