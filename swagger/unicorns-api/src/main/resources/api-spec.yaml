@@ -168,6 +168,8 @@ paths:
           description: Magic successfully created.
         401:
           description: Invalid or missing token.
+        409:
+          description: Magic already exists.
 
     get:
       description: Get the list of all magics.

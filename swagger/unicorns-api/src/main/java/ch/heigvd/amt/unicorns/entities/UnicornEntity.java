@@ -1,10 +1,14 @@
 package ch.heigvd.amt.unicorns.entities;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class UnicornEntity implements Serializable {
 
     @Id

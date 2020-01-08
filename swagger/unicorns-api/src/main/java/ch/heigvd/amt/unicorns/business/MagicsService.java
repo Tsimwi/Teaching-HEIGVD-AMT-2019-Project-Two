@@ -163,17 +163,19 @@ public class MagicsService {
         magic.setPower(entity.getPower());
         magic.setSpell(entity.getSpell());
 
-        List<Unicorn> unicorns = new ArrayList<>();
-        for (UnicornEntity unicornEntity : unicornEntities) {
-            Unicorn unicorn = new Unicorn();
-            unicorn.setName(unicornEntity.getName());
-            unicorn.setColor(unicornEntity.getColor());
-            unicorn.setSpeed(unicornEntity.getSpeed());
-            unicorn.setHasWings(unicornEntity.getHasWings());
-            unicorn.setMagics(null);
-            unicorns.add(unicorn);
+        if (unicornEntities != null) {
+            List<Unicorn> unicorns = new ArrayList<>();
+            for (UnicornEntity unicornEntity : unicornEntities) {
+                Unicorn unicorn = new Unicorn();
+                unicorn.setName(unicornEntity.getName());
+                unicorn.setColor(unicornEntity.getColor());
+                unicorn.setSpeed(unicornEntity.getSpeed());
+                unicorn.setHasWings(unicornEntity.getHasWings());
+                unicorn.setMagics(null);
+                unicorns.add(unicorn);
+            }
+            magic.setUnicorns(unicorns);
         }
-        magic.setUnicorns(unicorns);
         return magic;
     }
 

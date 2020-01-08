@@ -40,12 +40,12 @@ CREATE TABLE unicorn_entity_magic_entities
     CONSTRAINT fkgbpbhjhw89msdaa8h3f26n7or FOREIGN KEY (unicorn_entities_name)
         REFERENCES unicorn_entity (name) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID,
     CONSTRAINT fkovhwdsw2mpaoeg91fkc2h01de FOREIGN KEY (magic_entities_name)
         REFERENCES magic_entity (name) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID
 );
 
