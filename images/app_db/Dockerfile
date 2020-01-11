@@ -1,4 +1,4 @@
 FROM postgres:11
 
-ADD *.sql /docker-entrypoint-initdb.d/
+COPY ./docker-entrypoint-initdb.d/ /docker-entrypoint-initdb.d/
 
