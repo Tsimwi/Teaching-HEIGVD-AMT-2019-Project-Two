@@ -9,6 +9,9 @@ import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.UnicornRepository;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -51,14 +54,20 @@ public class UnicornsService {
      */
     public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
         //TODO utiliser les int
-        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner);
+        long numberOfUnicornsEntity = unicornRepository.countByEntityCreator(owner);
+        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage));
         List <SimpleUnicorn> simpleUnicorns = new ArrayList<>();
 
         for (UnicornEntity unicornEntity : unicorns) {
             simpleUnicorns.add(toSimpleUnicorn(unicornEntity));
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Pagination-NumberOfItems", String.valueOf(numberOfUnicornsEntity));
+        if (numberOfUnicornsEntity > numberPerPage){
+            headers.add("Pagination-Next", "/unicorns?numberPerPage=10&pageNumber=" + (pageNumber+1));
+        }
 
-        return new ResponseEntity<>(simpleUnicorns, HttpStatus.OK);
+        return new ResponseEntity<>(simpleUnicorns, headers, HttpStatus.OK);
     }
 
     /**

@@ -8,6 +8,8 @@ import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -49,14 +51,20 @@ public class MagicsService {
      */
     public ResponseEntity<List<SimpleMagic>> getMagics(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
         //TODO utiliser les int
-        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner);
+        long numberOfMagicsEntity = magicRepository.countByEntityCreator(owner);
+        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage));
         List<SimpleMagic> simpleMagics = new ArrayList<>();
 
         for (MagicEntity magicEntity : magics) {
             simpleMagics.add(toSimpleMagic(magicEntity));
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Pagination-NumberOfItems", String.valueOf(numberOfMagicsEntity));
+        if (numberOfMagicsEntity > numberPerPage){
+            headers.add("Pagination-Next", "/magics?numberPerPage=10&pageNumber=" + (pageNumber+1));
+        }
 
-        return new ResponseEntity<>(simpleMagics, HttpStatus.OK);
+        return new ResponseEntity<>(simpleMagics, headers, HttpStatus.OK);
     }
 
     /**
