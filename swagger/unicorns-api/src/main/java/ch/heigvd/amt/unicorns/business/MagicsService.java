@@ -3,12 +3,15 @@ package ch.heigvd.amt.unicorns.business;
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
+import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,9 @@ public class MagicsService {
     @Autowired
     MagicRepository magicRepository;
 
+    @Autowired
+    PayloadVerification payloadVerification;
+
     /**
      * Add a new magic in the database
      * @param magic The magic to add
@@ -31,26 +37,31 @@ public class MagicsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> addMagic(SimpleMagic magic, String creator) throws ApiException {
-        MagicEntity newMagicEntity = toMagicEntity(magic, creator);
+        if(payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)){
+            MagicEntity newMagicEntity = toMagicEntity(magic, creator);
 
-        if (!magicRepository.existsByName(magic.getName())) {
-            magicRepository.save(newMagicEntity);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } else {
-            throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            if (!magicRepository.existsByName(magic.getName())) {
+                magicRepository.save(newMagicEntity);
+                return new ResponseEntity<>(null, HttpStatus.CREATED);
+            } else {
+                throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            }
+        }else{
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**
      * Get the list of magics owned by the token bearer
      * @param owner The user that created the magics
-     * @param pageNumber
-     * @param numberPerPage
+     * @param pageNumber The request current page number
+     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<List<SimpleMagic>> getMagics(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
-        //TODO utiliser les int
+        //TODO trier par ordre alphabetique
         long numberOfMagicsEntity = magicRepository.countByEntityCreator(owner);
         List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage));
         List<SimpleMagic> simpleMagics = new ArrayList<>();
@@ -107,19 +118,24 @@ public class MagicsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> updateMagic(String name, SimpleMagic magic, String owner) throws ApiException {
-        MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
-        if (magicEntity != null) {
-            if (magicEntity.getEntityCreator().equals(owner)) {
-                magicEntity.setPower(magic.getPower());
-                magicEntity.setSpell(magic.getSpell());
-                magicRepository.save(magicEntity);
-                return new ResponseEntity<>(null, HttpStatus.CREATED);
+        if(payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)){
+            MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
+            if (magicEntity != null) {
+                if (magicEntity.getEntityCreator().equals(owner)) {
+                    magicEntity.setPower(magic.getPower());
+                    magicEntity.setSpell(magic.getSpell());
+                    magicRepository.save(magicEntity);
+                    return new ResponseEntity<>(null, HttpStatus.CREATED);
+                } else {
+                    throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                }
             } else {
-                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
             }
-        } else {
-            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }else {
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**

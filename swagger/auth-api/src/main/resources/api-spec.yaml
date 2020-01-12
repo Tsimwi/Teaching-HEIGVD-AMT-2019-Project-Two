@@ -52,6 +52,8 @@ paths:
       responses:
         201:
           description: created
+        400:
+          description: Invalid payload
         401:
           description: Invalid token
         403:
@@ -84,6 +86,8 @@ paths:
       responses:
         201:
           description: User updated successfully
+        400:
+          description: Invalid payload
         401:
           description: Invalid token
         403:

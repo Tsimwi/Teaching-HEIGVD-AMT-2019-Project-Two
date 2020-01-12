@@ -4,6 +4,7 @@ import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.UnicornRepository;
@@ -11,6 +12,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class UnicornsService {
     @Autowired
     UnicornRepository unicornRepository;
 
+    @Autowired
+    PayloadVerification payloadVerification;
+
     /**
      * Add a new unicorn in the database
      * @param unicorn The unicorn to add
@@ -36,12 +41,17 @@ public class UnicornsService {
     public ResponseEntity<Void> addUnicorn(SimpleUnicorn unicorn, String creator) throws ApiException {
         UnicornEntity newUnicornEntity = toUnicornEntity(unicorn, creator);
 
-        if (!unicornRepository.existsByName(unicorn.getName())) {
-            unicornRepository.save(newUnicornEntity);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } else {
-            throw new ApiException(HttpStatus.CONFLICT.value(), "");
+        if(payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)){
+            if (!unicornRepository.existsByName(unicorn.getName())) {
+                unicornRepository.save(newUnicornEntity);
+                return new ResponseEntity<>(null, HttpStatus.CREATED);
+            } else {
+                throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            }
+        }else{
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**
@@ -53,7 +63,7 @@ public class UnicornsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
-        //TODO utiliser les int
+        //TODO trier par ordre alphabetique
         long numberOfUnicornsEntity = unicornRepository.countByEntityCreator(owner);
         List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage));
         List <SimpleUnicorn> simpleUnicorns = new ArrayList<>();
@@ -110,20 +120,27 @@ public class UnicornsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> updateUnicorn(String name, SimpleUnicorn unicorn, String owner) throws ApiException {
-        UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
-        if (unicornEntity != null) {
-            if (unicornEntity.getEntityCreator().equals(owner)) {
-                unicornEntity.setColor(unicorn.getColor());
-                unicornEntity.setHasWings(unicorn.getHasWings());
-                unicornEntity.setSpeed(unicorn.getSpeed());
-                unicornRepository.save(unicornEntity);
-                return new ResponseEntity<>(null, HttpStatus.OK);
+
+        if(payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)){
+            UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
+
+            if (unicornEntity != null) {
+                if (unicornEntity.getEntityCreator().equals(owner)) {
+                    unicornEntity.setColor(unicorn.getColor());
+                    unicornEntity.setHasWings(unicorn.getHasWings());
+                    unicornEntity.setSpeed(unicorn.getSpeed());
+                    unicornRepository.save(unicornEntity);
+                    return new ResponseEntity<>(null, HttpStatus.OK);
+                } else {
+                    throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                }
             } else {
-                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
             }
         } else {
-            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**
@@ -135,6 +152,7 @@ public class UnicornsService {
      */
     public ResponseEntity<Void> deleteUnicorn(String name, String owner) throws ApiException {
         UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
+
         if (unicornEntity != null) {
             if (unicornEntity.getEntityCreator().equals(owner)) {
                 unicornRepository.deleteByName(name);
