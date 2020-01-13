@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @Controller
 public class MagicornApiController implements MagicornApi {
 
-    public ResponseEntity<Void> changeMagicorn(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Magicorn operation) {
+    public ResponseEntity<Void> changeMagicorn(@ApiParam(value = "", required = true) @Valid @RequestBody Magicorn operation) {
         return null;
     }
 }

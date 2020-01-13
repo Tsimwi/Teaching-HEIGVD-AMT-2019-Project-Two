@@ -87,12 +87,10 @@ public class UnicornsService {
      * @param name          The name of the unicorn
      * @param owner         The owner of the unicorn
      * @param fullView      A boolean to specify if we want to see all the magics related to the unicorn or not
-     * @param pageNumber    The request current page number
-     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView, Integer pageNumber, Integer numberPerPage) throws ApiException {
+    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView) throws ApiException {
         //TODO utiliser les int
         UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
         if (unicornEntity != null) {
