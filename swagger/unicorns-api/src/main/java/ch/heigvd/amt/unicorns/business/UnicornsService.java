@@ -33,6 +33,7 @@ public class UnicornsService {
 
     /**
      * Add a new unicorn in the database
+     *
      * @param unicorn The unicorn to add
      * @param creator The user creating the unicorn
      * @return A response code related to the result
@@ -41,14 +42,14 @@ public class UnicornsService {
     public ResponseEntity<Void> addUnicorn(SimpleUnicorn unicorn, String creator) throws ApiException {
         UnicornEntity newUnicornEntity = toUnicornEntity(unicorn, creator);
 
-        if(payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)){
+        if (payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)) {
             if (!unicornRepository.existsByName(unicorn.getName())) {
                 unicornRepository.save(newUnicornEntity);
                 return new ResponseEntity<>(null, HttpStatus.CREATED);
             } else {
                 throw new ApiException(HttpStatus.CONFLICT.value(), "");
             }
-        }else{
+        } else {
             throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
 
@@ -56,25 +57,25 @@ public class UnicornsService {
 
     /**
      * Get the list of unicorns owned by the token bearer
-     * @param owner The user that created the unicorns
-     * @param pageNumber The request current page number
+     *
+     * @param owner         The user that created the unicorns
+     * @param pageNumber    The request current page number
      * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
-        //TODO trier par ordre alphabetique
         long numberOfUnicornsEntity = unicornRepository.countByEntityCreator(owner);
-        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage));
-        List <SimpleUnicorn> simpleUnicorns = new ArrayList<>();
+        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage, Sort.by("name").ascending()));
+        List<SimpleUnicorn> simpleUnicorns = new ArrayList<>();
 
         for (UnicornEntity unicornEntity : unicorns) {
             simpleUnicorns.add(toSimpleUnicorn(unicornEntity));
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("Pagination-NumberOfItems", String.valueOf(numberOfUnicornsEntity));
-        if (numberOfUnicornsEntity > numberPerPage){
-            headers.add("Pagination-Next", "/unicorns?numberPerPage=10&pageNumber=" + (pageNumber+1));
+        if (numberOfUnicornsEntity > numberPerPage) {
+            headers.add("Pagination-Next", "/unicorns?numberPerPage=10&pageNumber=" + (pageNumber + 1));
         }
 
         return new ResponseEntity<>(simpleUnicorns, headers, HttpStatus.OK);
@@ -82,10 +83,11 @@ public class UnicornsService {
 
     /**
      * Get a unicorn by its name
-     * @param name The name of the unicorn
-     * @param owner The owner of the unicorn
-     * @param fullView A boolean to specify if we want to see all the magics related to the unicorn or not
-     * @param pageNumber The request current page number
+     *
+     * @param name          The name of the unicorn
+     * @param owner         The owner of the unicorn
+     * @param fullView      A boolean to specify if we want to see all the magics related to the unicorn or not
+     * @param pageNumber    The request current page number
      * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
@@ -113,15 +115,16 @@ public class UnicornsService {
 
     /**
      * Update an existing unicorn
-     * @param name The name of the unicorn
+     *
+     * @param name    The name of the unicorn
      * @param unicorn The new unicorn object
-     * @param owner The owner of the unicorn
+     * @param owner   The owner of the unicorn
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> updateUnicorn(String name, SimpleUnicorn unicorn, String owner) throws ApiException {
 
-        if(payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)){
+        if (payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)) {
             UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
 
             if (unicornEntity != null) {
@@ -145,7 +148,8 @@ public class UnicornsService {
 
     /**
      * Delete a unicorn
-     * @param name The name of the unicorn
+     *
+     * @param name  The name of the unicorn
      * @param owner The owner of the unicorn
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
@@ -168,6 +172,7 @@ public class UnicornsService {
 
     /**
      * Convert a simple unicorn into a unicorn entity
+     *
      * @param unicorn The simple unicorn
      * @param creator The creator of the unicorn
      * @return A unicorn entity
@@ -184,7 +189,8 @@ public class UnicornsService {
 
     /**
      * Convert a unicorn entity into a unicorn
-     * @param entity The unicorn entity
+     *
+     * @param entity        The unicorn entity
      * @param magicEntities The magic entities related to the unicorn
      * @return A unicorn object
      */
@@ -211,6 +217,7 @@ public class UnicornsService {
 
     /**
      * Convert a unicorn entity into a simple unicorn
+     *
      * @param entity The unicorn entity
      * @return A simple unicorn object
      */

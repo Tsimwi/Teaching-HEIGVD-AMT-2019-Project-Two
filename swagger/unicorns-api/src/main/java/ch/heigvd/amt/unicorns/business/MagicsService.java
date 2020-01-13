@@ -61,9 +61,8 @@ public class MagicsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<List<SimpleMagic>> getMagics(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
-        //TODO trier par ordre alphabetique
         long numberOfMagicsEntity = magicRepository.countByEntityCreator(owner);
-        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage));
+        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage, Sort.by("name").ascending()));
         List<SimpleMagic> simpleMagics = new ArrayList<>();
 
         for (MagicEntity magicEntity : magics) {
