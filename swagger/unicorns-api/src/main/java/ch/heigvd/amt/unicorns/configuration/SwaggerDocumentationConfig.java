@@ -40,6 +40,7 @@ public class SwaggerDocumentationConfig {
         List<SecurityScheme> schemeList = new ArrayList<>();
         schemeList.add(new ApiKey("Bearer", "Authorization", "header"));
         return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
                 .select()
                     .apis(RequestHandlerSelectors.basePackage("ch.heigvd.amt.unicorns.api"))
                     .build()

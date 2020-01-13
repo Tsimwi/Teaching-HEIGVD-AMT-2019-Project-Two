@@ -4,10 +4,15 @@ import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.UnicornRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,8 +26,12 @@ public class UnicornsService {
     @Autowired
     UnicornRepository unicornRepository;
 
+    @Autowired
+    PayloadVerification payloadVerification;
+
     /**
      * Add a new unicorn in the database
+     *
      * @param unicorn The unicorn to add
      * @param creator The user creating the unicorn
      * @return A response code related to the result
@@ -31,45 +40,55 @@ public class UnicornsService {
     public ResponseEntity<Void> addUnicorn(SimpleUnicorn unicorn, String creator) throws ApiException {
         UnicornEntity newUnicornEntity = toUnicornEntity(unicorn, creator);
 
-        if (!unicornRepository.existsByName(unicorn.getName())) {
-            unicornRepository.save(newUnicornEntity);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+        if (payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)) {
+            if (!unicornRepository.existsByName(unicorn.getName())) {
+                unicornRepository.save(newUnicornEntity);
+                return new ResponseEntity<>(null, HttpStatus.CREATED);
+            } else {
+                throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            }
         } else {
-            throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**
      * Get the list of unicorns owned by the token bearer
-     * @param owner The user that created the unicorns
-     * @param pageNumber The request current page number
+     *
+     * @param owner         The user that created the unicorns
+     * @param pageNumber    The request current page number
      * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
-        //TODO utiliser les int
-        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner);
-        List <SimpleUnicorn> simpleUnicorns = new ArrayList<>();
+        long numberOfUnicornsEntity = unicornRepository.countByEntityCreator(owner);
+        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage, Sort.by("name").ascending()));
+        List<SimpleUnicorn> simpleUnicorns = new ArrayList<>();
 
         for (UnicornEntity unicornEntity : unicorns) {
             simpleUnicorns.add(toSimpleUnicorn(unicornEntity));
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Pagination-NumberOfItems", String.valueOf(numberOfUnicornsEntity));
+        if (numberOfUnicornsEntity > numberPerPage) {
+            headers.add("Pagination-Next", "/unicorns?numberPerPage=10&pageNumber=" + (pageNumber + 1));
+        }
 
-        return new ResponseEntity<>(simpleUnicorns, HttpStatus.OK);
+        return new ResponseEntity<>(simpleUnicorns, headers, HttpStatus.OK);
     }
 
     /**
      * Get a unicorn by its name
-     * @param name The name of the unicorn
-     * @param owner The owner of the unicorn
-     * @param fullView A boolean to specify if we want to see all the magics related to the unicorn or not
-     * @param pageNumber The request current page number
-     * @param numberPerPage The requested number of results per page
+     *
+     * @param name          The name of the unicorn
+     * @param owner         The owner of the unicorn
+     * @param fullView      A boolean to specify if we want to see all the magics related to the unicorn or not
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView, Integer pageNumber, Integer numberPerPage) throws ApiException {
+    public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView) throws ApiException {
         //TODO utiliser les int
         UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
         if (unicornEntity != null) {
@@ -92,38 +111,48 @@ public class UnicornsService {
 
     /**
      * Update an existing unicorn
-     * @param name The name of the unicorn
+     *
+     * @param name    The name of the unicorn
      * @param unicorn The new unicorn object
-     * @param owner The owner of the unicorn
+     * @param owner   The owner of the unicorn
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> updateUnicorn(String name, SimpleUnicorn unicorn, String owner) throws ApiException {
-        UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
-        if (unicornEntity != null) {
-            if (unicornEntity.getEntityCreator().equals(owner)) {
-                unicornEntity.setColor(unicorn.getColor());
-                unicornEntity.setHasWings(unicorn.getHasWings());
-                unicornEntity.setSpeed(unicorn.getSpeed());
-                unicornRepository.save(unicornEntity);
-                return new ResponseEntity<>(null, HttpStatus.OK);
+
+        if (payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)) {
+            UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
+
+            if (unicornEntity != null) {
+                if (unicornEntity.getEntityCreator().equals(owner)) {
+                    unicornEntity.setColor(unicorn.getColor());
+                    unicornEntity.setHasWings(unicorn.getHasWings());
+                    unicornEntity.setSpeed(unicorn.getSpeed());
+                    unicornRepository.save(unicornEntity);
+                    return new ResponseEntity<>(null, HttpStatus.OK);
+                } else {
+                    throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                }
             } else {
-                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
             }
         } else {
-            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**
      * Delete a unicorn
-     * @param name The name of the unicorn
+     *
+     * @param name  The name of the unicorn
      * @param owner The owner of the unicorn
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> deleteUnicorn(String name, String owner) throws ApiException {
         UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
+
         if (unicornEntity != null) {
             if (unicornEntity.getEntityCreator().equals(owner)) {
                 unicornRepository.deleteByName(name);
@@ -139,6 +168,7 @@ public class UnicornsService {
 
     /**
      * Convert a simple unicorn into a unicorn entity
+     *
      * @param unicorn The simple unicorn
      * @param creator The creator of the unicorn
      * @return A unicorn entity
@@ -155,7 +185,8 @@ public class UnicornsService {
 
     /**
      * Convert a unicorn entity into a unicorn
-     * @param entity The unicorn entity
+     *
+     * @param entity        The unicorn entity
      * @param magicEntities The magic entities related to the unicorn
      * @return A unicorn object
      */
@@ -182,6 +213,7 @@ public class UnicornsService {
 
     /**
      * Convert a unicorn entity into a simple unicorn
+     *
      * @param entity The unicorn entity
      * @return A simple unicorn object
      */

@@ -3,7 +3,6 @@ Feature: Users related actions
   Background:
     Given there is an authenticate server
 
-#    TODO: verifier avec un autre appelle que l'utilisateur a bien été crer
   Scenario: Add a new user
     Given I have a user payload and a JWT token
     When I POST it to the /users endpoint

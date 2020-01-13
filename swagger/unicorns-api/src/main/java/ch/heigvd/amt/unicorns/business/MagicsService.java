@@ -3,11 +3,16 @@ package ch.heigvd.amt.unicorns.business;
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
+import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
 import ch.heigvd.amt.unicorns.repositories.MagicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,6 +26,9 @@ public class MagicsService {
     @Autowired
     MagicRepository magicRepository;
 
+    @Autowired
+    PayloadVerification payloadVerification;
+
     /**
      * Add a new magic in the database
      * @param magic The magic to add
@@ -29,34 +37,44 @@ public class MagicsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> addMagic(SimpleMagic magic, String creator) throws ApiException {
-        MagicEntity newMagicEntity = toMagicEntity(magic, creator);
+        if(payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)){
+            MagicEntity newMagicEntity = toMagicEntity(magic, creator);
 
-        if (!magicRepository.existsByName(magic.getName())) {
-            magicRepository.save(newMagicEntity);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } else {
-            throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            if (!magicRepository.existsByName(magic.getName())) {
+                magicRepository.save(newMagicEntity);
+                return new ResponseEntity<>(null, HttpStatus.CREATED);
+            } else {
+                throw new ApiException(HttpStatus.CONFLICT.value(), "");
+            }
+        }else{
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**
      * Get the list of magics owned by the token bearer
      * @param owner The user that created the magics
-     * @param pageNumber
-     * @param numberPerPage
+     * @param pageNumber The request current page number
+     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<List<SimpleMagic>> getMagics(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
-        //TODO utiliser les int
-        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner);
+        long numberOfMagicsEntity = magicRepository.countByEntityCreator(owner);
+        List<MagicEntity> magics = magicRepository.getMagicEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage, Sort.by("name").ascending()));
         List<SimpleMagic> simpleMagics = new ArrayList<>();
 
         for (MagicEntity magicEntity : magics) {
             simpleMagics.add(toSimpleMagic(magicEntity));
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Pagination-NumberOfItems", String.valueOf(numberOfMagicsEntity));
+        if (numberOfMagicsEntity > numberPerPage){
+            headers.add("Pagination-Next", "/magics?numberPerPage=10&pageNumber=" + (pageNumber+1));
+        }
 
-        return new ResponseEntity<>(simpleMagics, HttpStatus.OK);
+        return new ResponseEntity<>(simpleMagics, headers, HttpStatus.OK);
     }
 
     /**
@@ -64,12 +82,10 @@ public class MagicsService {
      * @param name The name of the magic
      * @param owner The owner of the magic
      * @param fullView A boolean to specify if we want to see all the unicorns related to the magic or not
-     * @param pageNumber The request current page number
-     * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<Magic> getMagicByName(String name, String owner, boolean fullView, Integer pageNumber, Integer numberPerPage) throws ApiException {
+    public ResponseEntity<Magic> getMagicByName(String name, String owner, boolean fullView) throws ApiException {
         //TODO utiliser les int
         MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
         if (magicEntity != null) {
@@ -99,19 +115,24 @@ public class MagicsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> updateMagic(String name, SimpleMagic magic, String owner) throws ApiException {
-        MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
-        if (magicEntity != null) {
-            if (magicEntity.getEntityCreator().equals(owner)) {
-                magicEntity.setPower(magic.getPower());
-                magicEntity.setSpell(magic.getSpell());
-                magicRepository.save(magicEntity);
-                return new ResponseEntity<>(null, HttpStatus.CREATED);
+        if(payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)){
+            MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
+            if (magicEntity != null) {
+                if (magicEntity.getEntityCreator().equals(owner)) {
+                    magicEntity.setPower(magic.getPower());
+                    magicEntity.setSpell(magic.getSpell());
+                    magicRepository.save(magicEntity);
+                    return new ResponseEntity<>(null, HttpStatus.CREATED);
+                } else {
+                    throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                }
             } else {
-                throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
+                throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
             }
-        } else {
-            throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
+        }else {
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
+
     }
 
     /**

@@ -17,7 +17,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   auth_db:
-    build: ../../images/postgres
+    build: ../../images/auth_db
     environment:
       POSTGRES_PASSWORD: password
     volumes:
@@ -25,7 +25,7 @@ services:
     container_name: auth_db
 
   app_db:
-    build: ../../images/postgres
+    build: ../../images/app_db
     environment:
       POSTGRES_PASSWORD: password
     volumes:
@@ -35,7 +35,8 @@ services:
   auth_backend:
     build: ../../images/auth_backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://auth_db:5432/projectTwo
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth_db:5432/project_two
       POSTGRES_PASSWORD: password
     container_name: auth_backend
     labels:
@@ -50,7 +51,8 @@ services:
   app_backend:
     build: ../../images/app_backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://app_db:5432/projectTwo
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://app_db:5432/project_two
       POSTGRES_PASSWORD: password
     container_name: app_backend
     labels:
@@ -61,15 +63,3 @@ services:
       - "traefik.http.middlewares.remove_app.stripprefix.prefixes=/app"
       - "traefik.http.middlewares.addapiprefix.addprefix.prefix=/api"
       - "traefik.http.routers.app_backend.middlewares=remove_app,addapiprefix"
-
-  pgadmin:
-    build: ../../images/pgadmin
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=amt@amt.ch
-      - PGADMIN_DEFAULT_PASSWORD=password
-    ports:
-      - 8888:80
-    container_name: amt_pgadmin
-    depends_on:
-      - app_db
-      - auth_db
