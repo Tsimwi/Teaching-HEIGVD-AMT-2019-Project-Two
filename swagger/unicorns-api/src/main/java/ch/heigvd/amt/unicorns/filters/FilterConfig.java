@@ -16,7 +16,7 @@ public class FilterConfig {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 
         registrationBean.setFilter(tokenFilter);
-        registrationBean.addUrlPatterns("/unicorns/*", "/unicorns", "/magics", "/magics/*");
+        registrationBean.addUrlPatterns("/unicorns/*", "/unicorns", "/magics", "/magics/*", "/magicorn");
 
         return registrationBean;
     }

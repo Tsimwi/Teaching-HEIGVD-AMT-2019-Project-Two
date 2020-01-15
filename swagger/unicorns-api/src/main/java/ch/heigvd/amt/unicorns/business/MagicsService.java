@@ -3,7 +3,6 @@ package ch.heigvd.amt.unicorns.business;
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
-import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
 import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
@@ -31,13 +30,14 @@ public class MagicsService {
 
     /**
      * Add a new magic in the database
-     * @param magic The magic to add
+     *
+     * @param magic   The magic to add
      * @param creator The user creating the magic
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> addMagic(SimpleMagic magic, String creator) throws ApiException {
-        if(payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)){
+        if (payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)) {
             MagicEntity newMagicEntity = toMagicEntity(magic, creator);
 
             if (!magicRepository.existsByName(magic.getName())) {
@@ -46,7 +46,7 @@ public class MagicsService {
             } else {
                 throw new ApiException(HttpStatus.CONFLICT.value(), "");
             }
-        }else{
+        } else {
             throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
 
@@ -54,8 +54,9 @@ public class MagicsService {
 
     /**
      * Get the list of magics owned by the token bearer
-     * @param owner The user that created the magics
-     * @param pageNumber The request current page number
+     *
+     * @param owner         The user that created the magics
+     * @param pageNumber    The request current page number
      * @param numberPerPage The requested number of results per page
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
@@ -70,8 +71,8 @@ public class MagicsService {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("Pagination-NumberOfItems", String.valueOf(numberOfMagicsEntity));
-        if (numberOfMagicsEntity > numberPerPage){
-            headers.add("Pagination-Next", "/magics?numberPerPage=10&pageNumber=" + (pageNumber+1));
+        if (numberOfMagicsEntity > numberPerPage) {
+            headers.add("Pagination-Next", "/magics?numberPerPage=10&pageNumber=" + (pageNumber + 1));
         }
 
         return new ResponseEntity<>(simpleMagics, headers, HttpStatus.OK);
@@ -79,8 +80,9 @@ public class MagicsService {
 
     /**
      * Get a magic by its name
-     * @param name The name of the magic
-     * @param owner The owner of the magic
+     *
+     * @param name     The name of the magic
+     * @param owner    The owner of the magic
      * @param fullView A boolean to specify if we want to see all the unicorns related to the magic or not
      * @return The result and the response code related to the result
      * @throws ApiException An exception in case of error during the process
@@ -108,14 +110,15 @@ public class MagicsService {
 
     /**
      * Update an existing magic
-     * @param name The name of the magic
+     *
+     * @param name  The name of the magic
      * @param magic The new magic object
      * @param owner The owner of the magic
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> updateMagic(String name, SimpleMagic magic, String owner) throws ApiException {
-        if(payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)){
+        if (payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)) {
             MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
             if (magicEntity != null) {
                 if (magicEntity.getEntityCreator().equals(owner)) {
@@ -129,15 +132,15 @@ public class MagicsService {
             } else {
                 throw new ApiException(HttpStatus.NOT_FOUND.value(), "");
             }
-        }else {
+        } else {
             throw new ApiException(HttpStatus.BAD_REQUEST.value(), "");
         }
-
     }
 
     /**
      * Delete a magic
-     * @param name The name of the magic
+     *
+     * @param name  The name of the magic
      * @param owner The owner of the magic
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
@@ -159,7 +162,8 @@ public class MagicsService {
 
     /**
      * Convert a simple magic into a magic entity
-     * @param magic The simple magic
+     *
+     * @param magic   The simple magic
      * @param creator The creator of the magic
      * @return A magic entity
      */
@@ -174,7 +178,8 @@ public class MagicsService {
 
     /**
      * Convert a magic entity into a magic
-     * @param entity The magic entity
+     *
+     * @param entity          The magic entity
      * @param unicornEntities The unicorn entities related to the magic
      * @return A magic object
      */
@@ -202,6 +207,7 @@ public class MagicsService {
 
     /**
      * Convert a magic entity into a simple magic
+     *
      * @param entity The magic entity
      * @return A simple magic object
      */

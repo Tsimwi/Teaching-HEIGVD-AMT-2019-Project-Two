@@ -33,7 +33,7 @@ paths:
         201:
           description: Unicorn successfully created.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         409:
@@ -93,7 +93,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -116,11 +116,11 @@ paths:
         200:
           description: Unicorn successfully updated.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -138,7 +138,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -159,7 +159,7 @@ paths:
         201:
           description: Magic successfully created.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         409:
@@ -219,7 +219,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
@@ -242,11 +242,11 @@ paths:
         200:
           description: Magic succesfully deleted.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
@@ -264,7 +264,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
@@ -284,11 +284,11 @@ paths:
         201:
           description: Successfull operation.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden
+          description: Forbidden operation.
 
 
 definitions:
