@@ -90,13 +90,16 @@ For the application API we have 3 tables : `magic_entity`, `unicorn_entity` and 
 
 ![](app_db.png)
 
+We chose that the `name` field of a unicorn_entity and magic_entity is the ID of the table. This implies that each object is unique because it is represented by its name. This has several repercussions:
 
+- if an user added a magic with a name, an other user can't add an magic with the same name. This is a little bit annoying because a magic have an owner and that only the owner can use the magic to link it to a unicorn.
+- when we create a magic or a unicorn we doesn't respond with a `Location` header or with the object created in the body. We chose to do that because the ID of the object is the name that we entered, so it's easy to know the ID to get the object with an other endpoint.
 
 ### Choices
 
 #### Table relation
 
-We chose a relation `ManyToMany` between our two tables. This choice mean that we have to take care to "wire" both side of the relation. We manage this relationship only in one place in the code, that's why we still chose this option.
+We chose a relation `ManyToMany` between our two tables. This choice mean that we have to take care to "wire" both side of the relation. We manage this relationship only in one place in the code, that's why we still chose this option but if the API grow it would be a good idea to to a table.
 
 #### JWT filter
 
