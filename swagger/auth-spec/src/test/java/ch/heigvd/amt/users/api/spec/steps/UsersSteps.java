@@ -26,7 +26,6 @@ public class UsersSteps {
     private DefaultApi api;
 
     User userToken;
-    UserCredentials userCredentials;
     User user;
     InlineObject password;
     private String token;
@@ -43,15 +42,6 @@ public class UsersSteps {
 
     }
 
-//    @Given("^there is an authenticate server$")
-//    public void thereIsAnAuthenticateServer() {
-//        assertNotNull(api);
-//    }
-
-//    @Then("^I receive a (\\d+) status code$")
-//    public void i_receive_a_status_code(int arg1) throws Throwable {
-//        assertEquals(arg1, environment.getLastStatusCode());
-//    }
 
     private String createFakeToken(){
         Algorithm algorithmHS = Algorithm.HMAC256("secret");
@@ -105,7 +95,7 @@ public class UsersSteps {
 
     }
 
-    @When("^I PATCH it to the /users/([^\"]*) endpoint$")
+    @When("^I PATCH it to the /users/(.*) endpoint$")
     public void iPATCHItToTheUsersEndpoint(String arg0) throws Throwable {
         try {
             api.getApiClient().setApiKey("Bearer " + token);
