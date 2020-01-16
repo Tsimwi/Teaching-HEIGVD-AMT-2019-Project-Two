@@ -33,7 +33,6 @@ public class Environment {
         this.userToken = new User();
         this.userToken.setEmail("test");
         this.userToken.setRole("Administrator");
-        createFakeToken();
     }
 
     public DefaultApi getApi() {

@@ -1,6 +1,6 @@
 package ch.heigvd.amt.unicorns.api.spec.steps;
 
-import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.dto.Unicorn;
 import ch.heigvd.amt.unicorns.api.DefaultApi;
 import ch.heigvd.amt.unicorns.api.spec.helpers.Environment;
 import ch.heigvd.amt.users.api.dto.User;
@@ -31,9 +31,6 @@ public class MagicornSteps {
     public MagicornSteps(Environment environment) {
         this.environment = environment;
         this.api = environment.getApi();
-        this.userToken = new ch.heigvd.amt.users.api.dto.User();
-        userToken.setEmail("admin@admin.ch");
-        userToken.setRole("Administrator");
-        uuid = UUID.randomUUID();
+
     }
 }

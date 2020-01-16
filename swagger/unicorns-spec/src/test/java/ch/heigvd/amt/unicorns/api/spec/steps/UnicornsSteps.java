@@ -25,11 +25,6 @@ public class UnicornsSteps {
     private Environment environment;
     private DefaultApi api;
 
-    private ApiResponse lastApiResponse;
-    private ApiException lastApiException;
-    private boolean lastApiCallThrewException;
-    private int lastStatusCode;
-
     private SimpleUnicorn unicorn;
     private Unicorn receivedUnicorn;
 
@@ -38,19 +33,10 @@ public class UnicornsSteps {
         this.api = environment.getApi();
     }
 
-    @Given("^I have a unicorn payload and a JWT token$")
-    public void iHaveAUnicornPayloadAndAJWTToken() {
-        this.unicorn = new SimpleUnicorn();
-        this.unicorn.setName("Rainbow");
-        this.unicorn.setColor("Purple");
-        this.unicorn.setHasWings(false);
-        this.unicorn.setSpeed(8);
-    }
 
     @When("^I POST it to the /unicorns endpoint$")
     public void iPOSTItToTheUnicornsEndpoint() {
         try {
-            api.getApiClient().setApiKey("Bearer " + environment.getToken());
             environment.setLastApiResponse(api.addUnicornWithHttpInfo(this.unicorn));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
@@ -83,7 +69,7 @@ public class UnicornsSteps {
     public void iReceiveAnArrayOfUnicorns() {
     }
 
-    @When("^I GET /unicorns/([^\"]*) endpoint$")
+    @When("^I GET /unicorns/(.*) endpoint$")
     public void iGETUnicornsEndpoint(String arg0) throws Throwable {
         try {
             environment.setLastApiResponse(api.getUnicornByNameWithHttpInfo(arg0, false));
@@ -99,8 +85,33 @@ public class UnicornsSteps {
         }
     }
 
-    @And("^I receive a SimpleUnicorn$")
-    public void iReceiveASimpleUnicorn() {
+    @And("^I receive a Unicorn$")
+    public void iReceiveAUnicorn() {
         assertEquals(receivedUnicorn.getName(), unicorn.getName());
+    }
+
+
+    @Given("^I have a unicorn payload with attribute name (.*)$")
+    public void iHaveAUnicornPayloadWithAttributeName(String arg0) throws Throwable {
+        this.unicorn = new SimpleUnicorn();
+        this.unicorn.setName(arg0);
+        this.unicorn.setColor("Purple");
+        this.unicorn.setHasWings(false);
+        this.unicorn.setSpeed(8);
+    }
+
+    @When("^I DELETE it to the /unicorns/(.*) endpoint$")
+    public void iDELETEItToTheUnicornsEndpoint(String arg0) throws Throwable {
+        try {
+            environment.setLastApiResponse(api.deleteUnicornWithHttpInfo(arg0));
+            environment.setLastApiCallThrewException(false);
+            environment.setLastApiException(null);
+            environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
+        } catch (ch.heigvd.amt.unicorns.ApiException e) {
+            environment.setLastApiCallThrewException(true);
+            environment.setLastApiResponse(null);
+            environment.setLastApiException(e);
+            environment.setLastStatusCode(environment.getLastApiException().getCode());
+        }
     }
 }
