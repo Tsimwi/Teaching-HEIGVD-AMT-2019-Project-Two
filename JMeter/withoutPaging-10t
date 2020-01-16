@@ -1,0 +1,21 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1579128646624,137,Login request,200,,setUp Thread Group 1-2,text,true,,331,255,3,3,http://localhost:8080/api/authentication,137,0,27
+1579128646624,137,Login request,200,,setUp Thread Group 1-1,text,true,,331,255,3,3,http://localhost:8080/api/authentication,137,0,27
+1579128646707,113,Login request,200,,setUp Thread Group 1-3,text,true,,331,255,4,4,http://localhost:8080/api/authentication,113,0,1
+1579128646806,151,Login request,200,,setUp Thread Group 1-4,text,true,,331,255,5,5,http://localhost:8080/api/authentication,151,0,1
+1579128646915,276,Login request,200,,setUp Thread Group 1-5,text,true,,331,255,7,7,http://localhost:8080/api/authentication,276,0,1
+1579128647010,291,Login request,200,,setUp Thread Group 1-6,text,true,,331,255,8,8,http://localhost:8080/api/authentication,291,0,3
+1579128647113,386,Login request,200,,setUp Thread Group 1-7,text,true,,331,255,10,10,http://localhost:8080/api/authentication,386,0,5
+1579128647205,443,Login request,200,,setUp Thread Group 1-8,text,true,,331,255,10,10,http://localhost:8080/api/authentication,443,0,0
+1579128647304,380,Login request,200,,setUp Thread Group 1-9,text,true,,331,255,10,10,http://localhost:8080/api/authentication,380,0,1
+1579128647412,316,Login request,200,,setUp Thread Group 1-10,text,true,,331,255,10,10,http://localhost:8080/api/authentication,315,0,1
+1579128647660,153956,Unicorns request,500,,setUp Thread Group 1-8,text,false,,3577,393,10,10,http://localhost:8081/api/unicorns,153955,0,6
+1579128646767,223563,Unicorns request,500,,setUp Thread Group 1-2,text,false,,358,393,9,9,http://localhost:8081/api/unicorns,223563,0,1
+1579128646959,223403,Unicorns request,500,,setUp Thread Group 1-4,text,false,,3227,393,8,8,http://localhost:8081/api/unicorns,223403,0,0
+1579128646767,247963,Unicorns request,500,,setUp Thread Group 1-1,text,false,,336,393,7,7,http://localhost:8081/api/unicorns,247963,0,1
+1579128646827,323657,Unicorns request,500,,setUp Thread Group 1-3,text,false,,358,393,6,6,http://localhost:8081/api/unicorns,323657,0,0
+1579128647193,396737,Unicorns request,500,,setUp Thread Group 1-5,text,false,,358,393,5,5,http://localhost:8081/api/unicorns,396737,0,0
+1579128647305,492255,Unicorns request,500,,setUp Thread Group 1-6,text,false,,358,393,4,4,http://localhost:8081/api/unicorns,492255,0,1
+1579128647729,512145,Unicorns request,200,,setUp Thread Group 1-10,text,true,,69568117,393,3,3,http://localhost:8081/api/unicorns,511287,0,1
+1579128647500,512673,Unicorns request,200,,setUp Thread Group 1-7,text,true,,69568117,393,2,2,http://localhost:8081/api/unicorns,511803,0,1
+1579128647685,512571,Unicorns request,200,,setUp Thread Group 1-9,text,true,,69568117,393,1,1,http://localhost:8081/api/unicorns,511679,0,1

@@ -1,0 +1,47 @@
+{
+  "Unicorns request" : {
+    "transaction" : "Unicorns request",
+    "sampleCount" : 10,
+    "errorCount" : 7,
+    "errorPct" : 70.0,
+    "meanResTime" : 359892.3,
+    "minResTime" : 153956.0,
+    "maxResTime" : 512673.0,
+    "pct1ResTime" : 512662.8,
+    "pct2ResTime" : 512673.0,
+    "pct3ResTime" : 512673.0,
+    "throughput" : 0.01947461386709355,
+    "receivedKBytesPerSec" : 396.933943798577,
+    "sentKBytesPerSec" : 0.0074741437986013326
+  },
+  "Login request" : {
+    "transaction" : "Login request",
+    "sampleCount" : 10,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 263.0,
+    "minResTime" : 113.0,
+    "maxResTime" : 443.0,
+    "pct1ResTime" : 437.3,
+    "pct2ResTime" : 443.0,
+    "pct3ResTime" : 443.0,
+    "throughput" : 9.057971014492754,
+    "receivedKBytesPerSec" : 2.9279183650362315,
+    "sentKBytesPerSec" : 2.2556470788043477
+  },
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 20,
+    "errorCount" : 7,
+    "errorPct" : 35.0,
+    "meanResTime" : 180077.64999999997,
+    "minResTime" : 113.0,
+    "maxResTime" : 512673.0,
+    "pct1ResTime" : 512528.4,
+    "pct2ResTime" : 512667.9,
+    "pct3ResTime" : 512673.0,
+    "throughput" : 0.03893838390131456,
+    "receivedKBytesPerSec" : 396.82972690381933,
+    "sentKBytesPerSec" : 0.01232034803127531
+  }
+}
