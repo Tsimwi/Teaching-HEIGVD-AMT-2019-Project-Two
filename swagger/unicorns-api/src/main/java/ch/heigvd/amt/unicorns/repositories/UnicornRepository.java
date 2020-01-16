@@ -13,6 +13,7 @@ import java.util.List;
 @Transactional
 public interface UnicornRepository extends PagingAndSortingRepository<UnicornEntity, Long> {
     boolean existsByName(String name);
+//    List<UnicornEntity> getUnicornEntitiesByEntityCreator(String entity_creator);
     List<UnicornEntity> getUnicornEntitiesByEntityCreator(String entity_creator, Pageable pageable);
     long countByEntityCreator(String creator);
     UnicornEntity getUnicornEntityByName(String name);

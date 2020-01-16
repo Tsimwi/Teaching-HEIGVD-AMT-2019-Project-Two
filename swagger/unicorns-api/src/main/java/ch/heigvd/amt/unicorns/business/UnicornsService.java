@@ -65,6 +65,7 @@ public class UnicornsService {
     public ResponseEntity<List<SimpleUnicorn>> getUnicorns(String owner, Integer pageNumber, Integer numberPerPage) throws ApiException {
         long numberOfUnicornsEntity = unicornRepository.countByEntityCreator(owner);
         List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner, PageRequest.of(pageNumber - 1, numberPerPage, Sort.by("name").ascending()));
+//        List<UnicornEntity> unicorns = unicornRepository.getUnicornEntitiesByEntityCreator(owner);
         List<SimpleUnicorn> simpleUnicorns = new ArrayList<>();
 
         for (UnicornEntity unicornEntity : unicorns) {
