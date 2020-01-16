@@ -31,7 +31,7 @@ public class UnicornsApiController implements UnicornsApi {
     @Autowired
     HttpServletRequest httpServletRequest;
 
-    public ResponseEntity<Void> addUnicorn(@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleUnicorn unicorn) {
+    public ResponseEntity<Void> addUnicorn(@ApiParam(value = "", required = true) @Valid @RequestBody SimpleUnicorn unicorn) {
         try {
             return unicornsService.addUnicorn(unicorn, (String) httpServletRequest.getAttribute("email"));
         } catch (ApiException exception) {
@@ -39,7 +39,7 @@ public class UnicornsApiController implements UnicornsApi {
         }
     }
 
-    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(@Min(1)@ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,@Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10") Integer numberPerPage) {
+    public ResponseEntity<List<SimpleUnicorn>> getUnicorns(@Min(1) @ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber, @Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue = "10") Integer numberPerPage) {
         try {
             return unicornsService.getUnicorns((String) httpServletRequest.getAttribute("email"), pageNumber, numberPerPage);
         } catch (ApiException exception) {
@@ -48,15 +48,15 @@ public class UnicornsApiController implements UnicornsApi {
     }
 
 
-    public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "",required=true) @PathVariable("name") String name, @ApiParam(value = "", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue="false") Boolean fullView, @Min(1)@ApiParam(value = "", defaultValue = "1") @Valid @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber, @Min(1) @Max(50) @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "numberPerPage", required = false, defaultValue="10") Integer numberPerPage) {
+    public ResponseEntity<Unicorn> getUnicornByName(@ApiParam(value = "", required = true) @PathVariable("name") String name, @ApiParam(value = "Display magics related to this unicorns", defaultValue = "false") @Valid @RequestParam(value = "fullView", required = false, defaultValue = "false") Boolean fullView) {
         try {
-            return unicornsService.getUnicornByName(name, (String) httpServletRequest.getAttribute("email"), fullView, pageNumber, numberPerPage);
+            return unicornsService.getUnicornByName(name, (String) httpServletRequest.getAttribute("email"), fullView);
         } catch (ApiException exception) {
             return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
     }
 
-    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SimpleUnicorn unicorn) {
+    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "", required = true) @PathVariable("name") String name, @ApiParam(value = "", required = true) @Valid @RequestBody SimpleUnicorn unicorn) {
         try {
             return unicornsService.updateUnicorn(name, unicorn, (String) httpServletRequest.getAttribute("email"));
         } catch (ApiException exception) {
@@ -64,7 +64,7 @@ public class UnicornsApiController implements UnicornsApi {
         }
     }
 
-    public ResponseEntity<Void> deleteUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name) {
+    public ResponseEntity<Void> deleteUnicorn(@ApiParam(value = "", required = true) @PathVariable("name") String name) {
         try {
             return unicornsService.deleteUnicorn(name, (String) httpServletRequest.getAttribute("email"));
         } catch (ApiException exception) {

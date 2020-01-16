@@ -32,13 +32,15 @@ paths:
       responses:
         201:
           description: Unicorn successfully created.
+        400:
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         409:
           description: Unicorn already exists.
 
     get:
-      description: Get the list of all unicorns.
+      description: Get the list of all yours unicorns.
       operationId: getUnicorns
       produces:
         - application/json
@@ -82,19 +84,7 @@ paths:
           default: false
           required: false
           type: boolean
-        - name: pageNumber
-          in: query
-          default: 1
-          required: false
-          type: integer
-          minimum: 1
-        - name: numberPerPage
-          in: query
-          default: 10
-          required: false
-          type: integer
-          minimum: 1
-          maximum: 50
+          description: Display magics related to this unicorns
       responses:
         200:
           description: success
@@ -103,7 +93,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -126,11 +116,11 @@ paths:
         200:
           description: Unicorn successfully updated.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -148,7 +138,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -169,7 +159,7 @@ paths:
         201:
           description: Magic successfully created.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         409:
@@ -220,19 +210,7 @@ paths:
           default: false
           required: false
           type: boolean
-        - name: pageNumber
-          in: query
-          default: 1
-          required: false
-          type: integer
-          minimum: 1
-        - name: numberPerPage
-          in: query
-          default: 10
-          required: false
-          type: integer
-          minimum: 1
-          maximum: 50
+          description: Display unicorns related to this magics
       responses:
         200:
           description: success
@@ -241,7 +219,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
@@ -264,11 +242,11 @@ paths:
         200:
           description: Magic succesfully deleted.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
@@ -286,7 +264,7 @@ paths:
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden.
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
@@ -306,11 +284,11 @@ paths:
         201:
           description: Successfull operation.
         400:
-          description: Invalid payload
+          description: Invalid payload.
         401:
           description: Invalid or missing token.
         403:
-          description: Forbidden
+          description: Forbidden operation.
 
 
 definitions:

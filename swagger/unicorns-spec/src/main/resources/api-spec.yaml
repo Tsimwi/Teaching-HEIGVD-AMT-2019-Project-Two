@@ -7,6 +7,14 @@ host: localhost:8080
 basePath: /api
 schemes:
   - http
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
+security:
+  - Bearer: []
 
 paths:
   /unicorns:
@@ -20,25 +28,45 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Unicorn'
+            $ref: '#/definitions/SimpleUnicorn'
       responses:
-        '201':
-          description: created
-          schema:
-            type: object
+        201:
+          description: Unicorn successfully created.
+        400:
+          description: Invalid payload.
+        401:
+          description: Invalid or missing token.
+        409:
+          description: Unicorn already exists.
 
     get:
-      description: Get the list of all unicorns.
+      description: Get the list of all yours unicorns.
       operationId: getUnicorns
       produces:
         - application/json
+      parameters:
+        - name: pageNumber
+          in: query
+          default: 1
+          required: false
+          type: integer
+          minimum: 1
+        - name: numberPerPage
+          in: query
+          default: 10
+          required: false
+          type: integer
+          minimum: 1
+          maximum: 50
       responses:
-        '200':
+        200:
           description: success
           schema:
             type: array
             items:
-              $ref: '#/definitions/Unicorn'
+              $ref: '#/definitions/SimpleUnicorn'
+        401:
+          description: Invalid or missing token.
 
   /unicorns/{name}:
     get:
@@ -56,15 +84,20 @@ paths:
           default: false
           required: false
           type: boolean
+          description: Display magics related to this unicorns
       responses:
         200:
           description: success
           schema:
             $ref: '#/definitions/Unicorn'
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
-    patch:
+    put:
       description: Update a unicorn.
       operationId: updateUnicorn
       consumes:
@@ -78,22 +111,34 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Unicorn'
+            $ref: '#/definitions/SimpleUnicorn'
       responses:
+        200:
+          description: Unicorn successfully updated.
+        400:
+          description: Invalid payload.
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
     delete:
       description: Delete a unicorn.
       operationId: deleteUnicorn
-      produces:
-        - application/json
       parameters:
         - name: name
           in: path
           required: true
           type: string
       responses:
+        200:
+          description: Unicorn successfully deleted.
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
         404:
           description: Unicorn not found.
 
@@ -109,25 +154,45 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Magic'
+            $ref: '#/definitions/SimpleMagic'
       responses:
         201:
-          description: created
-          schema:
-            type: object
+          description: Magic successfully created.
+        400:
+          description: Invalid payload.
+        401:
+          description: Invalid or missing token.
+        409:
+          description: Magic already exists.
 
     get:
       description: Get the list of all magics.
       operationId: getMagics
       produces:
         - application/json
+      parameters:
+        - name: pageNumber
+          in: query
+          default: 1
+          required: false
+          type: integer
+          minimum: 1
+        - name: numberPerPage
+          in: query
+          default: 10
+          required: false
+          type: integer
+          minimum: 1
+          maximum: 50
       responses:
         200:
           description: success
           schema:
             type: array
             items:
-              $ref: '#/definitions/Magic'
+              $ref: '#/definitions/SimpleMagic'
+        401:
+          description: Invalid or missing token.
 
   /magics/{name}:
     get:
@@ -145,15 +210,20 @@ paths:
           default: false
           required: false
           type: boolean
+          description: Display unicorns related to this magics
       responses:
         200:
           description: success
           schema:
             $ref: '#/definitions/Magic'
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
-    patch:
+    put:
       description: Update a magic.
       operationId: updateMagic
       consumes:
@@ -167,27 +237,62 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Magic'
+            $ref: '#/definitions/SimpleMagic'
       responses:
+        200:
+          description: Magic succesfully deleted.
+        400:
+          description: Invalid payload.
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
     delete:
       description: Delete a magic.
       operationId: deleteMagic
-      produces:
-        - application/json
       parameters:
         - name: name
           in: path
           required: true
           type: string
       responses:
+        200:
+          description: Magic successfully deleted.
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
         404:
           description: Magic not found.
 
+  /magicorn:
+    post:
+      description: Add/remove a relation between a unicorn and a magic.
+      operationId: changeMagicorn
+      consumes:
+        - application/json
+      parameters:
+        - name: operation
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Magicorn'
+      responses:
+        201:
+          description: Successfull operation.
+        400:
+          description: Invalid payload.
+        401:
+          description: Invalid or missing token.
+        403:
+          description: Forbidden operation.
+
+
 definitions:
-  Unicorn:
+  SimpleUnicorn:
     type: object
     properties:
       name:
@@ -199,6 +304,32 @@ definitions:
       speed:
         type: integer
 
+  SimpleMagic:
+    type: object
+    properties:
+      name:
+        type: string
+      spell:
+        type: string
+      power:
+        type: integer
+
+  Unicorn:
+    type: object
+    properties:
+      name:
+        type: string
+      color:
+        type: string
+      hasWings:
+        type: boolean
+      speed:
+        type: integer
+      magics:
+        type: array
+        items:
+          $ref: '#/definitions/Magic'
+
   Magic:
     type: object
     properties:
@@ -208,3 +339,21 @@ definitions:
         type: string
       power:
         type: integer
+      unicorns:
+        type: array
+        items:
+          $ref: '#/definitions/Unicorn'
+
+  Magicorn:
+    type: object
+    properties:
+      operation:
+        type: string
+      unicorn:
+        type: string
+      magic:
+        type: string
+    example:
+      operation: "link/unlink"
+      unicorn: "Pegasus"
+      magic: "Fire"

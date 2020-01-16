@@ -32,24 +32,12 @@ public class LoginSteps {
 
     }
 
-    @Given("^there is an authenticate server$")
-    public void thereIsAnAuthenticateServer() {
-        assertNotNull(api);
-    }
-
     @Given("^I have a credential payload$")
     public void iHaveACredentialPayload() {
         userCredentials = new ch.heigvd.amt.users.api.dto.UserCredentials();
         userCredentials.setEmail("admin@admin.ch");
         userCredentials.setPassword("test");
     }
-
-    @Then("^I receive a (\\d+) status code and a token$")
-    public void iReceiveAStatusCodeAndAToken(int arg0) {
-        assertEquals(arg0, environment.getLastStatusCode());
-        assertNotNull(token);
-    }
-
 
 
     @When("^I POST it to the /authentication endpoint$")
@@ -68,6 +56,12 @@ public class LoginSteps {
         }
     }
 
+    @Then("^I receive a (\\d+) status code and a token$")
+    public void iReceiveAStatusCodeAndAToken(int arg0) {
+        assertEquals(arg0, environment.getLastStatusCode());
+        assertNotNull(token);
+    }
+
 
     @Given("^I have a wrong credential payload$")
     public void iHaveAWrongCredentialPayload() {
@@ -77,10 +71,7 @@ public class LoginSteps {
     }
 
 
-    @Then("^I receive a (\\d+) status code$")
-    public void i_receive_a_status_code(int arg1) throws Throwable {
-        assertEquals(arg1, environment.getLastStatusCode());
-    }
+
 
 }
 
