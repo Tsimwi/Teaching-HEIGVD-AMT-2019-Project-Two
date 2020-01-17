@@ -39,4 +39,14 @@ public class CommonSteps {
         api.getApiClient().setApiKey("Bearer " + environment.getToken());
 
     }
+
+    @Given("^I have a malformed token$")
+    public void iHaveAMalformedToken() {
+        api.getApiClient().setApiKey("Bere " + environment.getToken());
+    }
+
+    @Given("^I have an invalid token$")
+    public void iHaveAnInvalidToken() {
+        api.getApiClient().setApiKey("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jaCIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE1NzkyOTcxOTksImlhdCI6MTU3OTI5NzE5OX0.USYs2AJ40vT0OzHs3QNwU1YIH1j9WlcjC0yo0aTDE0Y");
+    }
 }

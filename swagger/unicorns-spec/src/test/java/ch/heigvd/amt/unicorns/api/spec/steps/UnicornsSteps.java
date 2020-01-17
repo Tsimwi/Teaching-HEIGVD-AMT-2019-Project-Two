@@ -30,9 +30,9 @@ public class UnicornsSteps {
 
     private SimpleUnicorn unicorn;
     private Unicorn receivedUnicorn;
-    private SimpleUnicorn receivedSimpleUnicorn;
     private List<SimpleUnicorn> simpleUnicornList;
     private UUID uuid;
+    private UUID uuidUpdated;
 
     public UnicornsSteps(Environment environment) {
         this.environment = environment;
@@ -137,5 +137,32 @@ public class UnicornsSteps {
             assertEquals(receivedUnicorn.getName(), unicorn.getName());
         }
 
+    }
+
+    @And("^I update my unicorn payload$")
+    public void iUpdateMyUnicornPayload() {
+        uuidUpdated = UUID.randomUUID();
+        unicorn.setName(uuidUpdated.toString());
+    }
+
+    @When("^I PUT it to the /unicorn/<name> endpoint$")
+    public void iPUTItToTheUnicornNameEndpoint() {
+        try {
+            environment.setLastApiResponse(api.updateUnicornWithHttpInfo(uuid.toString(), unicorn));
+            environment.setLastApiCallThrewException(false);
+            environment.setLastApiException(null);
+            environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
+
+        } catch (ch.heigvd.amt.unicorns.ApiException e) {
+            environment.setLastApiCallThrewException(true);
+            environment.setLastApiResponse(null);
+            environment.setLastApiException(e);
+            environment.setLastStatusCode(environment.getLastApiException().getCode());
+        }
+    }
+
+    @And("^I receive an Unicorns that match the update with fullviews false$")
+    public void iReceiveAnUnicornsThatMatchTheUpdateWithFullviewsFalse() {
+        assertEquals(uuidUpdated.toString(), unicorn.getName());
     }
 }
