@@ -14,8 +14,11 @@ import ch.heigvd.amt.unicorns.ApiResponse;
 import ch.heigvd.amt.unicorns.api.DefaultApiTest;
 import ch.heigvd.amt.unicorns.api.dto.MagicTest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Olivier Liechti on 27/07/17.
@@ -27,12 +30,25 @@ public class UnicornsSteps {
 
     private SimpleUnicorn unicorn;
     private Unicorn receivedUnicorn;
+    private SimpleUnicorn receivedSimpleUnicorn;
+    private List<SimpleUnicorn> simpleUnicornList;
+    private UUID uuid;
 
     public UnicornsSteps(Environment environment) {
         this.environment = environment;
         this.api = environment.getApi();
+        this.simpleUnicornList = new ArrayList<>();
+        this.uuid = UUID.randomUUID();
     }
 
+    @Given("^I have a unicorn payload$")
+    public void iHaveAUnicornPayload() throws Throwable {
+        this.unicorn = new SimpleUnicorn();
+        this.unicorn.setName(this.uuid.toString());
+        this.unicorn.setColor("Purple");
+        this.unicorn.setHasWings(false);
+        this.unicorn.setSpeed(8);
+    }
 
     @When("^I POST it to the /unicorns endpoint$")
     public void iPOSTItToTheUnicornsEndpoint() {
@@ -56,7 +72,22 @@ public class UnicornsSteps {
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
-            //receivedUnicorn =
+            simpleUnicornList = (List<SimpleUnicorn>) environment.getLastApiResponse().getData();
+        } catch (ch.heigvd.amt.unicorns.ApiException e) {
+            environment.setLastApiCallThrewException(true);
+            environment.setLastApiResponse(null);
+            environment.setLastApiException(e);
+            environment.setLastStatusCode(environment.getLastApiException().getCode());
+        }
+    }
+
+    @When("^I DELETE it to the /unicorns/<name> endpoint$")
+    public void iDELETEItToTheUnicornsEndpoint() throws Throwable {
+        try {
+            environment.setLastApiResponse(api.deleteUnicornWithHttpInfo(unicorn.getName()));
+            environment.setLastApiCallThrewException(false);
+            environment.setLastApiException(null);
+            environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
         } catch (ch.heigvd.amt.unicorns.ApiException e) {
             environment.setLastApiCallThrewException(true);
             environment.setLastApiResponse(null);
@@ -67,16 +98,26 @@ public class UnicornsSteps {
 
     @And("^I receive an array of Unicorns$")
     public void iReceiveAnArrayOfUnicorns() {
+        assertNotNull(simpleUnicornList);
+        assertFalse(simpleUnicornList.isEmpty());
     }
 
-    @When("^I GET /unicorns/(.*) endpoint$")
-    public void iGETUnicornsEndpoint(String arg0) throws Throwable {
+
+    @And("^I receive an array of Unicorns with magics$")
+    public void iReceiveAnArrayOfUnicornsWithMagics() {
+        assertNotNull(simpleUnicornList);
+        assertFalse(simpleUnicornList.isEmpty());
+    }
+
+    @When("^I GET /unicorns/<name> endpoint with fullviwes (.*)$")
+    public void iGETUnicornsNameEndpointWithFullviwesFalse(String arg0) {
         try {
-            environment.setLastApiResponse(api.getUnicornByNameWithHttpInfo(arg0, false));
+            environment.setLastApiResponse(api.getUnicornByNameWithHttpInfo(this.unicorn.getName(), arg0.equals("true")));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
             receivedUnicorn = (Unicorn) environment.getLastApiResponse().getData();
+
         } catch (ch.heigvd.amt.unicorns.ApiException e) {
             environment.setLastApiCallThrewException(true);
             environment.setLastApiResponse(null);
@@ -85,33 +126,16 @@ public class UnicornsSteps {
         }
     }
 
-    @And("^I receive a Unicorn$")
-    public void iReceiveAUnicorn() {
-        assertEquals(receivedUnicorn.getName(), unicorn.getName());
-    }
 
-
-    @Given("^I have a unicorn payload with attribute name (.*)$")
-    public void iHaveAUnicornPayloadWithAttributeName(String arg0) throws Throwable {
-        this.unicorn = new SimpleUnicorn();
-        this.unicorn.setName(arg0);
-        this.unicorn.setColor("Purple");
-        this.unicorn.setHasWings(false);
-        this.unicorn.setSpeed(8);
-    }
-
-    @When("^I DELETE it to the /unicorns/(.*) endpoint$")
-    public void iDELETEItToTheUnicornsEndpoint(String arg0) throws Throwable {
-        try {
-            environment.setLastApiResponse(api.deleteUnicornWithHttpInfo(arg0));
-            environment.setLastApiCallThrewException(false);
-            environment.setLastApiException(null);
-            environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
-        } catch (ch.heigvd.amt.unicorns.ApiException e) {
-            environment.setLastApiCallThrewException(true);
-            environment.setLastApiResponse(null);
-            environment.setLastApiException(e);
-            environment.setLastStatusCode(environment.getLastApiException().getCode());
+    @And("^I receive an Unicorns with fullviews (.*)$")
+    public void iReceiveAnUnicornsWithFullviews(String arg0) {
+        if (arg0.equals("true")) {
+            assertNotNull(receivedUnicorn);
+            assertNotNull(receivedUnicorn.getMagics());
+        } else {
+            assertNotNull(receivedUnicorn);
+            assertEquals(receivedUnicorn.getName(), unicorn.getName());
         }
+
     }
 }
