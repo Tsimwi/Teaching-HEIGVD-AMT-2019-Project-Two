@@ -33,5 +33,20 @@ Feature: Users related actions
 
   Scenario: make a request without JWT token
     Given I have a password payload
-    When I PATCH it to the /users/admin@admin.ch endpoint
+    When I PATCH it to the /users/hjjhj endpoint without the header
     Then I receive a 401 status code
+
+  Scenario: make a request with a malformed Authorization header
+    Given I have a user payload and a JWT token
+    When I POST it to the /users endpoint without Bearer string
+    Then I receive a 401 status code
+
+  Scenario: add a user without all the properties
+    Given I have a user payload malformed and a JWT token
+    When I POST it to the /users endpoint
+    Then I receive a 400 status code
+
+  Scenario: change a password with an empty password
+    Given I have a password payload malformed and a JWT token
+    When I PATCH it to the /users/admin@admin.ch endpoint
+    Then I receive a 400 status code

@@ -42,8 +42,7 @@ public class UsersSteps {
 
     }
 
-
-    private String createFakeToken(){
+    private String createFakeToken() {
         Algorithm algorithmHS = Algorithm.HMAC256("secret");
         Date now = new Date();
         /* 5 hour of validation */
@@ -60,7 +59,6 @@ public class UsersSteps {
     @Given("^I have a user payload and a JWT token$")
     public void iHaveAUserPayloadAndAJWTToken() {
 
-
         this.user = new ch.heigvd.amt.users.api.dto.User();
         this.user.setEmail(this.uuid + "@test.com");
         this.user.setFirstName("FirstName");
@@ -68,13 +66,13 @@ public class UsersSteps {
         this.user.setPassword("1234");
         this.user.setRole("Administrator");
         this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
     }
 
 
     @When("^I POST it to the /users endpoint$")
     public void iPOSTItToTheUsersEndpoint() {
         try {
-            api.getApiClient().setApiKey("Bearer " + token);
             environment.setLastApiResponse(api.addUserWithHttpInfo(user));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
@@ -92,13 +90,14 @@ public class UsersSteps {
         this.password = new ch.heigvd.amt.users.api.dto.InlineObject();
         this.password.setPassword("test");
         this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
 
     }
 
     @When("^I PATCH it to the /users/(.*) endpoint$")
     public void iPATCHItToTheUsersEndpoint(String arg0) throws Throwable {
         try {
-            api.getApiClient().setApiKey("Bearer " + token);
+
             environment.setLastApiResponse(api.updateUserWithHttpInfo(arg0, this.password));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
@@ -113,19 +112,20 @@ public class UsersSteps {
     }
 
 
-
     @Given("^I have a user payload and a JWT token not administrator$")
     public void iHaveAUserPayloadAndAJWTTokenNotAdministrator() {
         UUID uuid = UUID.randomUUID();
 
         this.user = new ch.heigvd.amt.users.api.dto.User();
-        this.user.setEmail(uuid+"@test.com");
+        this.user.setEmail(uuid + "@test.com");
         this.user.setFirstName("FirstName");
         this.user.setLastName("Test");
         this.user.setPassword("1234");
         this.user.setRole("Administrator");
         this.userToken.setRole("Collaborator");
         this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
+
     }
 
     @Given("^I have a user payload that already exist and a JWT token$")
@@ -138,6 +138,8 @@ public class UsersSteps {
         this.user.setPassword("1234");
         this.user.setRole("Administrator");
         this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
+
     }
 
     @Given("^I have a password payload and a JWT token with a bad email$")
@@ -146,13 +148,67 @@ public class UsersSteps {
         this.password.setPassword("jeujeujeu");
         this.userToken.setEmail("dd");
         this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
+
     }
 
     @Given("^I have a password payload$")
     public void iHaveAPasswordPayload() {
         this.password = new ch.heigvd.amt.users.api.dto.InlineObject();
         this.password.setPassword("admin");
-        this.token = "";
+        this.token = null;
+        api.getApiClient().setApiKey("Bearer " + token);
+    }
+
+    @When("^I PATCH it to the /users/(.*) endpoint without the header$")
+    public void iPATCHItToTheUsersHjjhjEndpointWithoutTheHeader(String arg0) {
+        try {
+            environment.setLastApiResponse(api.updateUserWithHttpInfo(arg0, this.password));
+            environment.setLastApiCallThrewException(false);
+            environment.setLastApiException(null);
+            environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
+        } catch (ApiException e) {
+            environment.setLastApiCallThrewException(true);
+            environment.setLastApiResponse(null);
+            environment.setLastApiException(e);
+            environment.setLastStatusCode(environment.getLastApiException().getCode());
+        }
+    }
+
+    @When("^I POST it to the /users endpoint without Bearer string$")
+    public void iPOSTItToTheUsersEndpointWithoutBearerString() {
+        try {
+            api.getApiClient().setApiKey("Berer " + token);
+            environment.setLastApiResponse(api.addUserWithHttpInfo(user));
+            environment.setLastApiCallThrewException(false);
+            environment.setLastApiException(null);
+            environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
+        } catch (ApiException e) {
+            environment.setLastApiCallThrewException(true);
+            environment.setLastApiResponse(null);
+            environment.setLastApiException(e);
+            environment.setLastStatusCode(environment.getLastApiException().getCode());
+        }
+    }
+
+    @Given("^I have a user payload malformed and a JWT token$")
+    public void iHaveAUserPayloadMalformedAndAJWTToken() {
+        this.user = new ch.heigvd.amt.users.api.dto.User();
+        this.user.setEmail(this.uuid + "@test.com");
+        this.user.setFirstName("");
+        this.user.setLastName("Test");
+        this.user.setPassword("1234");
+        this.user.setRole("Administrator");
+        this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
+    }
+
+    @Given("^I have a password payload malformed and a JWT token$")
+    public void iHaveAPasswordPayloadMalformedAndAJWTToken() {
+        this.password = new ch.heigvd.amt.users.api.dto.InlineObject();
+        this.password.setPassword("");
+        this.token = createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + this.token);
     }
 }
 
