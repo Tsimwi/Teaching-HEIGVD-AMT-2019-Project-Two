@@ -2,9 +2,12 @@ package ch.heigvd.amt.unicorns.api.spec.steps;
 
 import ch.heigvd.amt.unicorns.api.DefaultApi;
 import ch.heigvd.amt.unicorns.api.spec.helpers.Environment;
+import ch.heigvd.amt.users.api.dto.User;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+
+import javax.jws.soap.SOAPBinding;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -48,5 +51,15 @@ public class CommonSteps {
     @Given("^I have an invalid token$")
     public void iHaveAnInvalidToken() {
         api.getApiClient().setApiKey("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jaCIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE1NzkyOTcxOTksImlhdCI6MTU3OTI5NzE5OX0.USYs2AJ40vT0OzHs3QNwU1YIH1j9WlcjC0yo0aTDE0Y");
+    }
+
+    @Then("^I change the jwt to have a new one of an other user$")
+    public void iChangeTheJwtToHaveANewOneOfAnOtherUser() {
+        User user = new User();
+        user.setEmail("test");
+        user.setRole("Administrator");
+        environment.setUserToken(user);
+        environment.createFakeToken();
+        api.getApiClient().setApiKey("Bearer " + environment.getToken());
     }
 }

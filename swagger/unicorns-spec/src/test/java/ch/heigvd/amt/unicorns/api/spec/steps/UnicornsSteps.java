@@ -65,10 +65,10 @@ public class UnicornsSteps {
         }
     }
 
-    @When("^I GET /unicorns endpoint$")
-    public void iGETUnicornsEndpoint() {
+    @When("^I GET /unicorns endpoint with page number (\\d+) and number per page (\\d+)$")
+    public void iGETUnicornsEndpoint(int arg0, int arg1) {
         try {
-            environment.setLastApiResponse(api.getUnicornsWithHttpInfo(1, 50));
+            environment.setLastApiResponse(api.getUnicornsWithHttpInfo(arg0, arg1));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -164,5 +164,27 @@ public class UnicornsSteps {
     @And("^I receive an Unicorns that match the update with fullviews false$")
     public void iReceiveAnUnicornsThatMatchTheUpdateWithFullviewsFalse() {
         assertEquals(uuidUpdated.toString(), unicorn.getName());
+    }
+
+    @Given("^I have a malformed unicorn payload$")
+    public void iHaveAMalformedUnicornPayload() {
+        this.unicorn = new SimpleUnicorn();
+        this.unicorn.setName(this.uuid.toString());
+        this.unicorn.setColor("");
+        this.unicorn.setHasWings(false);
+        this.unicorn.setSpeed( null);
+    }
+
+    @And("^I take the first unicorn in the list$")
+    public void iTakeTheFirstInTheList() {
+        assertNotNull(this.simpleUnicornList);
+        this.unicorn = simpleUnicornList.get(0);
+
+    }
+
+    @Given("^I have an unicorn name$")
+    public void iHaveAnUnicornName() {
+        this.unicorn = new SimpleUnicorn();
+        this.unicorn.setName(UUID.randomUUID().toString());
     }
 }

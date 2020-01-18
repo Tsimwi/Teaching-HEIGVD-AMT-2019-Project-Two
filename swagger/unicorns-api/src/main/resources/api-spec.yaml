@@ -240,7 +240,7 @@ paths:
             $ref: '#/definitions/SimpleMagic'
       responses:
         200:
-          description: Magic succesfully deleted.
+          description: Magic succesfully updated.
         400:
           description: Invalid payload.
         401:
@@ -349,11 +349,11 @@ definitions:
     properties:
       operation:
         type: string
+        example: add/remove
       unicorn:
         type: string
+        example: Pegasus
       magic:
         type: string
-    example:
-      operation: "link/unlink"
-      unicorn: "Pegasus"
-      magic: "Fire"
+        example: Fire breth
+

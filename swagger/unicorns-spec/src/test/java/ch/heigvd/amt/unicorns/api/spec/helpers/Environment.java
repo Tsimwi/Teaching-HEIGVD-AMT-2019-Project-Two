@@ -10,6 +10,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by Olivier Liechti on 24/06/17.
@@ -24,6 +25,8 @@ public class Environment {
     private int lastStatusCode;
     private String token;
     private User userToken;
+    private String unicornName;
+    private String magicName;
 
     public Environment() throws IOException {
         Properties properties = new Properties();
@@ -31,7 +34,7 @@ public class Environment {
         String url = properties.getProperty("ch.heigvd.amt.unicorns.server.url");
         api.getApiClient().setBasePath(url);
         this.userToken = new User();
-        this.userToken.setEmail("test");
+        this.userToken.setEmail("admin@admin.ch");
         this.userToken.setRole("Administrator");
     }
 
@@ -81,6 +84,14 @@ public class Environment {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getUnicornName() {
+        return unicornName;
+    }
+
+    public String getMagicName() {
+        return magicName;
     }
 
     public void createFakeToken() {
