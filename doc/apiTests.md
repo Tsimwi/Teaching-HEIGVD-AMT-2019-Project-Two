@@ -54,7 +54,7 @@ The idea of these two "implementation" is that you can give the first one to the
 
 ![](img/cucumber_image.png)
 
-_Cucumber_ and _picocontainer_ operate is as follows. When a scenario begins an Environment class is instantiated with dependency injection. Then picocontainer will take the sentences in English and will browse the Steps files. When it finds a match it knows that it will have to instantiate the so-called Steps class. We can notice that in the constructors of the Steps classes we pass the environment as a parameter. So the environment is common to all instantiated steps classes
+_Cucumber_ and _picocontainer_ operate as follows : when a scenario begins an `Environment` class is instantiated with dependency injection. Then _picocontainer_ will parse the sentences in English and will browse the `Steps` classes. When it finds a match it knows that it will have to instantiate the so-called `Steps` class. We can notice that in the constructors of the Steps classes we pass the `Environment` object as a parameter. So the environment is common to all instantiated steps classes
 
 ## Test JMeter
 

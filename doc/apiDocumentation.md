@@ -1,6 +1,6 @@
 # APIs Documentation
 
-We chose to create an add-on for our first project (Dungeons and Unicorns). This API will be focus on unicorns. Since a unicorn is a magic animal it must have magic powers. Is that our application wanted to set up. So an unicorn can have multiple magics that represent a magic spell.
+We chose to create an add-on for our first project (Dungeons and Unicorns). This API will be focus on unicorns. Since a unicorn is a magic animal it must have magic powers. It's what our application wanted to set up. So an unicorn can have multiple magics and each of them represent a magic spell.
 
 ## Authentication api
 
