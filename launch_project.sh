@@ -3,6 +3,7 @@ AUTH_DIR=swagger/auth-api
 DOCKER_DIR=topology/topology-amt-prod
 AUTH_IMAGE_DIR=images/auth_backend
 APP_IMAGE_DIR=images/app_backend
+rm error.log
 if [ $# -eq 1 ]
   then
     if [ $1 = "-f" ]
@@ -26,8 +27,17 @@ echo "\n\nLaunching docker\n\n"
 docker-compose -f ${DOCKER_DIR}/docker-compose.yml down
 if [ "$fullBuild" = true ]
   then	
-    docker-compose -f ${DOCKER_DIR}/docker-compose.yml up --build
+    docker-compose -f ${DOCKER_DIR}/docker-compose.yml --log-level ERROR  up -d --build > /dev/null 2>error.log
   else
-    docker-compose -f ${DOCKER_DIR}/docker-compose.yml up
+    docker-compose -f ${DOCKER_DIR}/docker-compose.yml --log-level ERROR  up -d > /dev/null 2>error.log
 fi
+if [ $? -eq 0 ]
+  then
+    echo "\n\e[32mEnvironment launched\e[0m\n"
+    printf "Authentication API swagger :\t\e[1mhttp://localhost/auth/swagger-ui.html\e[0m\n"
 
+    printf "Application API swagger:\t\e[1mhttp://localhost/app/swagger-ui.html\e[0m\n"
+    printf "\nYou can now run test with the script './run_tests.sh'\n\n"
+  else
+    echo "\e[31mDocker-compose up failed. You can have more details in ./error.log\n\n"
+fi
