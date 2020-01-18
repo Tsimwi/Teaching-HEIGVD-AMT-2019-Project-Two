@@ -88,16 +88,15 @@ JPA provide also an API to interact with _Hibernate ORM_. With this ORM, databas
 
 ### Dependency injection
 
-Like in the first project, we use _dependency injection_. To use _dependency injection_ in _Spring_ you have to add an annotation on the class that you want to inject, the annotation is `@Component`. And in the class where you want to inject the component  you have to use it like that
+Like in the first project, we use _dependency injection_. To use _dependency injection_ in _Spring_ you have to add an annotation on the class that you want to inject, the annotation is `@Component`.
 
 ```java
-@Component
 public class UnicornsService {
 //...
 }
 ```
 
-
+ And in the class where you want to inject the component you have to define it as a local variable with the annotation `@Autowired`
 
 ```java
 @Controller
@@ -105,6 +104,15 @@ public class UnicornsApiController implements UnicornsApi {
 
     @Autowired
     UnicornsService unicornsService;
+    
+    public ResponseEntity<Void> addUnicorn(...) {
+        try {
+            return unicornsService.addUnicorn(...);
+        } catch (ApiException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
+        }
+    }
+    //...
 }
 ```
 
