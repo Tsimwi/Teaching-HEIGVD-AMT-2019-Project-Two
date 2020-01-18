@@ -4,7 +4,7 @@
 
 ### Swagger and bottom-up
 
-First we had to define our APIs using swagger and an YAML file. From this file we were able to generate JAVA code using the "spring-fox" plug in, this technique is called "Bottom-up". Here is an example of the swagger file:
+First we had to define our APIs using swagger and an YAML file. From this file we were able to generate JAVA code using the "spring-fox" plug in, this technique is called "top-down". Here is an example of the swagger file:
 
 ```yaml
 swagger: '2.0'
@@ -48,7 +48,7 @@ paths:
 
 ### JWT
 
-Some endpoints need to be protected, we want that only authenticated users use our APIs. The only endpoint that is not protected is the `authentication` endpoint. When a user authenticate himself, on this endpoint, a token will be created and signed, with a secret, by the server. To proceed to the verification we have set up a filter on others endpoint, this filter is responsible of the verification of the token. In the filter class we used the dependence injection on the class `TokenImplementation` with the annotation `@Autowired` of spring. The filter extract the value of the `Authorization` header and then give this value to the service. The service verify if the token is still valid, with claims `IssuedAt` and `ExpiresAt`, and if the signature is correct.
+Some endpoints need to be protected, we want that only authenticated users use our APIs. The only endpoint that is not protected is the `authentication` endpoint. When an user authenticate himself, on this endpoint, a token will be created and signed, with a secret, by the server. To proceed to the verification we have set up a filter on others endpoint, this filter is responsible of the verification of the token. In the filter class we used the dependence injection on the class `TokenImplementation` with the annotation `@Autowired` of spring. The filter extract the value of the `Authorization` header and then give this value to the service. The service verify if the token is still valid, with claims `IssuedAt` and `ExpiresAt`, and if the signature is correct (both api share a secret to verify signature).
 
 ### JPA
 
@@ -84,7 +84,31 @@ spring.datasource.username=<user>
 spring.datasource.password=<password>
 ```
 
-JPA provide also an API to interact with _Hibernate ORM_. WIth this ORM, database request are very simple. Some request are already defined in the interface `CrudRepository`, if we want custom request we have to create an interface and write the signature of the method, for example to find an user with his mail we write `UserEntity findByMail(String mail)`. But we never write the code of the method, it's _Hibernate_ that will parse the function's name and make the request.
+JPA provide also an API to interact with _Hibernate ORM_. With this ORM, database request are very simple. Some request are already defined in the interface `CrudRepository`, if we want custom request we have to create an interface and write the signature of the method, for example to find an user with his mail we write `UserEntity findByMail(String mail)`. But we never write the code of the method, it's _Hibernate_ that will parse the function's name and make the request.
+
+### Dependency injection
+
+Like in the first project, we use _dependency injection_. To use _dependency injection_ in _Spring_ you have to add an annotation on the class that you want to inject, the annotation is `@Component`. And in the class where you want to inject the component  you have to use it like that
+
+```java
+@Component
+public class UnicornsService {
+//...
+}
+```
+
+
+
+```java
+@Controller
+public class UnicornsApiController implements UnicornsApi {
+
+    @Autowired
+    UnicornsService unicornsService;
+}
+```
+
+
 
 ## Authentication API
 
@@ -107,7 +131,7 @@ return JWT.create()
     .sign(algorithmHS);
 ```
 
-In the token we store the ID of the user, his role when the token has been created and when it expire. And after that we sign the token
+In the token we store the ID of the user, his role, when the token has been created and when it expire. And after that we sign the token.
 
 ## Application API
 
