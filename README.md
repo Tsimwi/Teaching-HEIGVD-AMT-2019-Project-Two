@@ -11,15 +11,21 @@ You'll need to have `docker` and `docker-compose` installed on your machine in o
 
 ## Build the project
 
-The script `launch_project.sh` is used to start the production environment. The script accept parameters like `-f` to make a full build.
+The script `launch_project.sh` is used to start the production environment. The script accept parameters like `-f` to make a full build (`mvn clean install` on both API modules, `docker-compose up --build`).
 
 ```bash
 $./launch_project.sh -f
 ```
 
-Once the environment up you can launch tests. To do that you simply have to run the script `./run_tests.sh`. 
+Once the environment is up you can launch tests. To do that you simply have to run the script :
 
-**Note : **Tests will add some testing data in database, if you don't want these data in the environment you can run the script `./cleanDocker.sh` and `./launch_project.sh -f` again.
+```bash
+$./run_tests.sh
+```
+
+
+
+**Note : **Tests will add some testing data in database, if you don't want these data in the environment you can run the script `./cleanDocker.sh` and `./launch_project.sh` again.
 
 ## Report
 
