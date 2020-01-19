@@ -70,9 +70,6 @@ public class LoginSteps {
         userCredentials.setPassword("youlost");
     }
 
-
-
-
 }
 
 

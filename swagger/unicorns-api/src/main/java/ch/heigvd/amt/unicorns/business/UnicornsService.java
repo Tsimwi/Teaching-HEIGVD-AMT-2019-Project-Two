@@ -38,10 +38,10 @@ public class UnicornsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Void> addUnicorn(SimpleUnicorn unicorn, String creator) throws ApiException {
-        UnicornEntity newUnicornEntity = toUnicornEntity(unicorn, creator);
 
         if (payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)) {
             if (!unicornRepository.existsByName(unicorn.getName())) {
+                UnicornEntity newUnicornEntity = toUnicornEntity(unicorn, creator);
                 unicornRepository.save(newUnicornEntity);
                 return new ResponseEntity<>(null, HttpStatus.CREATED);
             } else {
@@ -90,7 +90,6 @@ public class UnicornsService {
      * @throws ApiException An exception in case of error during the process
      */
     public ResponseEntity<Unicorn> getUnicornByName(String name, String owner, boolean fullView) throws ApiException {
-        //TODO utiliser les int
         UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
         if (unicornEntity != null) {
             if (unicornEntity.getEntityCreator().equals(owner)) {

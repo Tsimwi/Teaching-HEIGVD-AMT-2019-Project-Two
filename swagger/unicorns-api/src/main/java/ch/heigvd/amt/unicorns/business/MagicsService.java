@@ -125,7 +125,7 @@ public class MagicsService {
                     magicEntity.setPower(magic.getPower());
                     magicEntity.setSpell(magic.getSpell());
                     magicRepository.save(magicEntity);
-                    return new ResponseEntity<>(null, HttpStatus.CREATED);
+                    return new ResponseEntity<>(null, HttpStatus.OK);
                 } else {
                     throw new ApiException(HttpStatus.FORBIDDEN.value(), "");
                 }
