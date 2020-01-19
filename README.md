@@ -43,6 +43,17 @@ $./cleanDocker.sh
 * **[Part 3.](doc/apiTests.md)** The testing strategy behind it and the experiment
 * **[Part 4.](doc/apiBugs.md)** Known bugs and limitations
 
+## Repository organization
+
+![](doc/img/repo_orga.png)
+
+- doc : documentation about the project
+- images : docker images
+- JMeter : report and test plan used for testing
+- script : python script used to generate 1'000'000 unicorns
+- swagger : APIs modules
+- topology : both topology used
+
 
 
 
