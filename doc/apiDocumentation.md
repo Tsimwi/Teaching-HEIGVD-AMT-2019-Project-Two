@@ -12,7 +12,7 @@ For the authentication API we have one table, `users_entity` that is represented
 
 To get the documentation about the endpoints you can go on [http://localhost/auth/swagger-ui.html](http://localhost/auth/swagger-ui.html) when the topology is launched.
 
-Once you are logged you receive a JWT to be able to make other call on API (add a user and update your password).
+Once you are logged you receive a JWT to be able to make other call on API (add an user and update your password).
 
 ### Choices
 
@@ -32,7 +32,7 @@ We chose the point that only an administrator can add an account to the auth api
 
 #### Update password
 
-To update the password we use the method `PATCH`. We chose this method because for an `user_entity` we will only change one properties and the payload of the request is identical for every requests (except the value of the password of cours).
+To update the password we use the method `PATCH`. We chose this method because for an `user_entity` we will only change one properties and the payload of the request is identical for every requests (except the value of the password of course).
 
 #### Payload verification
 
@@ -40,6 +40,20 @@ To verify that the payload given in the request is valid we implemented a kind o
 
 ```java
     /**
+     * This method will return the list of all getter of a class
+     * @param c the class that we want to analyse
+     * @return a list of method
+     */
+    public boolean checkPayloadIsValid(Class<?> c, Object payload) {
+        ArrayList<Method> list = new ArrayList<>();
+        Method[] methods = c.getDeclaredMethods();
+        for (Method method : methods)
+            if (isGetter(method))
+                list.add(method);
+        return checkPayloadIsValidImplementation(payload, list);
+    }    
+
+     /**
      * This method check that the payload is valid. A valid payload mean that
      * all value were given and that they were not empty
      * @param payload the payload that we want to test if it's valid
@@ -60,20 +74,6 @@ To verify that the payload given in the request is valid we implemented a kind o
         }
         return true;
     }
-
-    /**
-     * This method will return the list of all getter of a class
-     * @param c the class that we want to analyse
-     * @return a list of method
-     */
-    public boolean checkPayloadIsValid(Class<?> c, Object payload) {
-        ArrayList<Method> list = new ArrayList<>();
-        Method[] methods = c.getDeclaredMethods();
-        for (Method method : methods)
-            if (isGetter(method))
-                list.add(method);
-        return checkPayloadIsValidImplementation(payload, list);
-    }
 ```
 
 #### Management of error code
@@ -90,10 +90,10 @@ For the application API we have 3 tables : `magic_entity`, `unicorn_entity` and 
 
 ![](img/app_db.png)
 
-We chose that the `name` field of a unicorn_entity and magic_entity is the ID of the table. This implies that each object is unique because it is represented by its name. This has several repercussions:
+We chose that the field `name`of an `unicorn_entity` and `magic_entity` is the ID of the table. This implies that each object is unique because it is represented by its name. This has several repercussions:
 
 - if an user added a magic with a name, an other user can't add an magic with the same name. This is a little bit annoying because a magic have an owner and that only the owner can use the magic to link it to a unicorn.
-- when we create a magic or a unicorn we doesn't respond with a `Location` header or with the object created in the body. We chose to do that because the ID of the object is the name that we entered, so it's easy to know the ID to get the object with an other endpoint.
+- when we create a magic or an unicorn we doesn't respond with a `Location` header or with the object created in the body. We chose to do that because the ID of the object is the name that we entered, so it's easy to know the ID to get the object with an other endpoint.
 
 ### Choices
 
