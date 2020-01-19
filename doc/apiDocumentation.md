@@ -99,7 +99,7 @@ We chose that the field `name`of an `unicorn_entity` and `magic_entity` is the I
 
 #### Table relation
 
-We chose a relation `ManyToMany` between our two tables. This choice mean that we have to take care to "wire" both side of the relation. We manage this relationship only in one place in the code, that's why we still chose this option but if the API grow it would be a good idea to to a table.
+We chose a relation `ManyToMany` between our two tables. This choice mean that we have to take care to "wire" both side of the relation. We manage this relationship only in one place in the code, that's why we still chose this option but if the API grow it would be a good idea to do a table with an ID and two relation `ManyToOne` to the two other tables.
 
 #### JWT filter
 
