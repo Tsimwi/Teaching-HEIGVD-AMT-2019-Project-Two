@@ -1,4 +1,6 @@
-# Testing strategy
+# Testing
+
+[TOC]
 
 There are a lot of possibilities when we talk about tests. The image below show a classification of all tests. With _Cucumber_ we are in the quadrant Q1: **Unit tests and Integration tests** and with _JMeter_ we are in the quadrant Q4: **performance tests, security tests and fault-tolerance test**. We talk more about both strategy right after.
 
@@ -87,6 +89,14 @@ And when we receive a response we can see that we get data and paging header.
 
 ![response_data](img/response_data.png)
 
+To launch tests we used the CLI, because it's more efficient. The command that we used was : 
+
+```bash
+JVM_ARGS='-Xms8192m -Xmx8192m' ./bin/jmeter -n -t ../AMT/Teaching-HEIGVD-AMT-2019-Project-Two/JMeter/testPlan/Paging.jmx  -l ../AMT/Teaching-HEIGVD-AMT-2019-Project-Two/JMeter/<resultName> -e -o ../AMT/Teaching-HEIGVD-AMT-2019-Project-Two/JMeter/report/<resultName>
+```
+
+
+
 ## Opinions
 
 ### Cucumber
@@ -110,7 +120,7 @@ We manage to factorize some tests definition with regex and by putting them in t
 
 ### JMeter
 
-We are not surprise by the result of JMeter. Like in the first project we tested with and without paging on one endpoint. With no surprise when there is no pagination the application is very slow to respond and sometime crash.
+We are not surprise by the result of JMeter. Like in the first project we tested with and without paging on one endpoint. With no surprise when there is no pagination the application is very slow to respond and sometime it crash.
 
 This is a summarize table of the first JMeter test.
 
@@ -124,7 +134,7 @@ In an other test that we made we tried to simulate the fact that 10 different us
 
 Here the result is worst, the application crashed on 7 requests and the average response time is **6 minutes**.
 
-After that we changed and we used paging. On the test we requested the 1st page and 10 object on the page.
+After that we changed and we used paging. On this test we requested the 1st page and 10 object on the page.
 
 ![](img/table_jmeter_paging_2.png)
 
@@ -138,11 +148,11 @@ We can see that the time difference between the fact to ask the 1st or th 100th 
 
 ### JMeter
 
-As we already used _JMeter_ it was easy to implement our tests. We had some issue because _JMeter variables_ are not shared between _thread group_ so he had to make a request login every time, but it's not a problem.
+As we already used _JMeter_ it was easy to implement our tests. We had some issue because _JMeter variables_ are not shared between _thread group_ so we had to make a request login every time, but it's not a problem.
 
 ### Cucumber
 
-Cucumber tests are not easy at the beginning, it's important to understand how it's work behind the scene. But when you know the machine it's fast and easy to implement. It's interesting to use the regex feature, it allow a lot factorizing.
+Cucumber tests are not easy at the beginning, it's important to understand how it's work behind the scene. But when you know the machine it's fast and easy to implement. It's interesting to use the regex feature, it allow a lot of factorizing. As our both controllers (unicorn and magic) have the same behaviors, we have done all tests for one controller and we copied them for the other controller and we changed all unicorn related object by magic object.
 
 
 
