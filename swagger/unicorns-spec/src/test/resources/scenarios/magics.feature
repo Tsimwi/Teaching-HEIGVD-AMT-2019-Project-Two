@@ -73,37 +73,37 @@ Feature: Magics related actions
     When I GET /magics/<name> endpoint with fullview false
     Then I receive a 404 status code
 
-  Scenario: Get a magic of an other user
+  Scenario: Get a magic of another user
     Given I have a magic payload
     And I POST it to the /magics endpoint
     Then I change the jwt to have a new one of an other user
     When I GET /magics/<name> endpoint with fullview false
     Then I receive a 403 status code
 
-  Scenario: Update an magic with a malformed payload
+  Scenario: Update a magic with a malformed payload
     Given I have a malformed magic payload
     And I update my magic payload
     When I PUT it to the /magic/<name> endpoint
     Then I receive a 400 status code
 
-  Scenario: Update an magic that doesn't exist
+  Scenario: Update a magic that doesn't exist
     Given I have a magic payload
     When I PUT it to the /magic/<name> endpoint
     Then I receive a 404 status code
 
-  Scenario: Update an magic of an other user
+  Scenario: Update a magic of another user
     Given I have a magic payload
     And I POST it to the /magics endpoint
     Then I change the jwt to have a new one of an other user
     When I PUT it to the /magic/<name> endpoint
     Then I receive a 403 status code
 
-  Scenario: Delete an magic that doesn't exist
+  Scenario: Delete a magic that doesn't exist
     Given I have a magic name
     When I DELETE it to the /magics/<name> endpoint
     Then I receive a 404 status code
 
-  Scenario: Delete an magic of an other user
+  Scenario: Delete a magic of another user
     Given I have a magic payload
     And I POST it to the /magics endpoint
     Then I change the jwt to have a new one of an other user

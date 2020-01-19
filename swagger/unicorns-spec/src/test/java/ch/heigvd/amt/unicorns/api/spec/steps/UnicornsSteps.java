@@ -93,8 +93,8 @@ public class UnicornsSteps {
         assertFalse(simpleUnicornList.isEmpty());
     }
 
-    @When("^I GET /unicorns/<name> endpoint with fullviwes (.*)$")
-    public void iGETUnicornsNameEndpointWithFullviwesFalse(String arg0) {
+    @When("^I GET /unicorns/<name> endpoint with fullview (.*)$")
+    public void iGETUnicornsNameEndpointWithFullviewFalse(String arg0) {
         try {
             environment.setLastApiResponse(api.getUnicornByNameWithHttpInfo(environment.getSimpleUnicorn().getName(), arg0.equals("true")));
             environment.setLastApiCallThrewException(false);
@@ -111,8 +111,8 @@ public class UnicornsSteps {
     }
 
 
-    @And("^I receive an Unicorns with fullviews (.*)$")
-    public void iReceiveAnUnicornsWithFullviews(String arg0) {
+    @And("^I receive an Unicorns with fullview (.*)$")
+    public void iReceiveAnUnicornsWithFullview(String arg0) {
         if (arg0.equals("true")) {
             assertNotNull(receivedUnicorn);
             assertNotNull(receivedUnicorn.getMagics());
@@ -151,8 +151,8 @@ public class UnicornsSteps {
         }
     }
 
-    @And("^I receive an Unicorns that match the update with fullviews false$")
-    public void iReceiveAnUnicornsThatMatchTheUpdateWithFullviewsFalse() {
+    @And("^I receive an Unicorns that match the update with fullview false$")
+    public void iReceiveAnUnicornsThatMatchTheUpdateWithFullviewFalse() {
         assertEquals(updatedHasWingBoolean, environment.getUpdateUnicorn().getHasWings());
     }
 

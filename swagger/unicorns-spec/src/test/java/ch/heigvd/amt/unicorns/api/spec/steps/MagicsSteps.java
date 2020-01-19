@@ -116,7 +116,7 @@ public class MagicsSteps {
 
 
     @And("^I receive a Magic with fullview (.*)$")
-    public void iReceiveAnMagicsWithFullviews(String arg0) {
+    public void iReceiveAnMagicsWithFullview(String arg0) {
         if (arg0.equals("true")) {
             assertNotNull(receivedMagic);
             assertNotNull(receivedMagic.getUnicorns());
