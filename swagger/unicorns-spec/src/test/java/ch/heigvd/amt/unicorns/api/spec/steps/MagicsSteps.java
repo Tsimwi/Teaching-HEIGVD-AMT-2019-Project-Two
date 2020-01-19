@@ -3,6 +3,7 @@ package ch.heigvd.amt.unicorns.api.spec.steps;
 import ch.heigvd.amt.unicorns.api.DefaultApi;
 import ch.heigvd.amt.unicorns.api.dto.SimpleMagic;
 import ch.heigvd.amt.unicorns.api.dto.Magic;
+import ch.heigvd.amt.unicorns.api.dto.UpdateMagic;
 import ch.heigvd.amt.unicorns.api.spec.helpers.Environment;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
@@ -26,31 +27,21 @@ public class MagicsSteps {
     private Environment environment;
     private DefaultApi api;
 
-    private SimpleMagic magic;
     private Magic receivedMagic;
     private List<SimpleMagic> simpleMagicsList;
-    private UUID uuid;
-    private UUID uuidUpdated;
+
+    private Integer updatedPowerValue;
 
     public MagicsSteps(Environment environment) {
         this.environment = environment;
         this.api = environment.getApi();
         this.simpleMagicsList = new ArrayList<>();
-        this.uuid = UUID.randomUUID();
-    }
-
-    @Given("^I have a magic payload$")
-    public void iHaveAMagicPayload() throws Throwable {
-        this.magic = new SimpleMagic();
-        this.magic.setName(this.uuid.toString());
-        this.magic.setPower(3);
-        this.magic.setSpell("Unlimited power !!");
     }
 
     @When("^I POST it to the /magics endpoint$")
     public void iPOSTItToTheMagicsEndpoint() {
         try {
-            environment.setLastApiResponse(api.addMagicWithHttpInfo(this.magic));
+            environment.setLastApiResponse(api.addMagicWithHttpInfo(environment.getSimpleMagic()));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -81,7 +72,7 @@ public class MagicsSteps {
     @When("^I DELETE it to the /magics/<name> endpoint$")
     public void iDELETEItToTheMagicsEndpoint() throws Throwable {
         try {
-            environment.setLastApiResponse(api.deleteMagicWithHttpInfo(magic.getName()));
+            environment.setLastApiResponse(api.deleteMagicWithHttpInfo(environment.getSimpleMagic().getName()));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -109,7 +100,7 @@ public class MagicsSteps {
     @When("^I GET /magics/<name> endpoint with fullviwes (.*)$")
     public void iGETMagicsNameEndpointWithFullviwesFalse(String arg0) {
         try {
-            environment.setLastApiResponse(api.getMagicByNameWithHttpInfo(this.magic.getName(), arg0.equals("true")));
+            environment.setLastApiResponse(api.getMagicByNameWithHttpInfo(environment.getSimpleMagic().getName(), arg0.equals("true")));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -131,21 +122,26 @@ public class MagicsSteps {
             assertNotNull(receivedMagic.getUnicorns());
         } else {
             assertNotNull(receivedMagic);
-            assertEquals(receivedMagic.getName(), magic.getName());
+            assertEquals(receivedMagic.getName(), environment.getSimpleMagic().getName());
         }
 
     }
 
     @And("^I update my magic payload$")
     public void iUpdateMyMagicPayload() {
-        uuidUpdated = UUID.randomUUID();
-        magic.setName(uuidUpdated.toString());
+        SimpleMagic simpleMagic = environment.getSimpleMagic();
+        UpdateMagic updateMagic = new UpdateMagic();
+        updatedPowerValue = 10;
+
+        updateMagic.setPower(updatedPowerValue);
+        updateMagic.setSpell(simpleMagic.getSpell());
+        environment.setUpdateMagic(updateMagic);
     }
 
     @When("^I PUT it to the /magic/<name> endpoint$")
     public void iPUTItToTheMagicNameEndpoint() {
         try {
-            environment.setLastApiResponse(api.updateMagicWithHttpInfo(uuid.toString(), magic));
+            environment.setLastApiResponse(api.updateMagicWithHttpInfo(environment.getSimpleMagic().getName(), environment.getUpdateMagic()));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -160,27 +156,28 @@ public class MagicsSteps {
 
     @And("^I receive an Magics that match the update with fullviews false$")
     public void iReceiveAnMagicsThatMatchTheUpdateWithFullviewsFalse() {
-        assertEquals(uuidUpdated.toString(), magic.getName());
+        assertEquals(updatedPowerValue, environment.getUpdateMagic().getPower());
     }
 
     @Given("^I have a malformed magic payload$")
     public void iHaveAMalformedMagicPayload() {
-        this.magic = new SimpleMagic();
-        this.magic.setName(this.uuid.toString());
-        this.magic.setPower(3);
-        this.magic.setSpell("");
+        SimpleMagic magic = new SimpleMagic();
+        magic.setName(UUID.randomUUID().toString());
+        magic.setPower(null);
+        magic.setSpell("");
+        environment.setSimpleMagic(magic);
     }
 
     @And("^I take the first magic in the list$")
     public void iTakeTheFirstInTheList() {
         assertNotNull(this.simpleMagicsList);
-        this.magic = simpleMagicsList.get(0);
+        environment.setSimpleMagic(simpleMagicsList.get(0));
 
     }
 
     @Given("^I have an magic name$")
     public void iHaveAnMagicName() {
-        this.magic = new SimpleMagic();
-        this.magic.setName(UUID.randomUUID().toString());
+        environment.setSimpleMagic(new SimpleMagic());
+        environment.getSimpleMagic().setName(UUID.randomUUID().toString());
     }
 }

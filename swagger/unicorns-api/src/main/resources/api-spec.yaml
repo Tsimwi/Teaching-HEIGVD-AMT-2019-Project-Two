@@ -111,7 +111,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/SimpleUnicorn'
+            $ref: '#/definitions/UpdateUnicorn'
       responses:
         200:
           description: Unicorn successfully updated.
@@ -237,7 +237,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/SimpleMagic'
+            $ref: '#/definitions/UpdateMagic'
       responses:
         200:
           description: Magic succesfully updated.
@@ -304,11 +304,29 @@ definitions:
       speed:
         type: integer
 
+  UpdateUnicorn:
+    type: object
+    properties:
+      color:
+        type: string
+      hasWings:
+        type: boolean
+      speed:
+        type: integer
+
   SimpleMagic:
     type: object
     properties:
       name:
         type: string
+      spell:
+        type: string
+      power:
+        type: integer
+
+  UpdateMagic:
+    type: object
+    properties:
       spell:
         type: string
       power:
@@ -355,5 +373,4 @@ definitions:
         example: Pegasus
       magic:
         type: string
-        example: Fire breth
-
+        example: Fire breath

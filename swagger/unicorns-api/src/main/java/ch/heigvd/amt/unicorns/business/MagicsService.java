@@ -4,6 +4,7 @@ import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.model.UpdateMagic;
 import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
@@ -117,8 +118,8 @@ public class MagicsService {
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<Void> updateMagic(String name, SimpleMagic magic, String owner) throws ApiException {
-        if (payloadVerification.checkPayloadIsValid(SimpleMagic.class, magic)) {
+    public ResponseEntity<Void> updateMagic(String name, UpdateMagic magic, String owner) throws ApiException {
+        if (payloadVerification.checkPayloadIsValid(UpdateMagic.class, magic)) {
             MagicEntity magicEntity = magicRepository.getMagicEntityByName(name);
             if (magicEntity != null) {
                 if (magicEntity.getEntityCreator().equals(owner)) {

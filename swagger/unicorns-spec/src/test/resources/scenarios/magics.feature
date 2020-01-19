@@ -82,6 +82,7 @@ Feature: Magics related actions
 
   Scenario: Update an magic with a malformed payload
     Given I have a malformed magic payload
+    And I update my magic payload
     When I PUT it to the /magic/<name> endpoint
     Then I receive a 400 status code
 

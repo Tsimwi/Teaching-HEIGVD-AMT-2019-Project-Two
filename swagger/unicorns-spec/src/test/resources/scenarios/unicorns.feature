@@ -82,6 +82,7 @@ Feature: Unicorns related actions
 
   Scenario: Update an unicorn with a malformed payload
     Given I have a malformed unicorn payload
+    And I update my unicorn payload
     When I PUT it to the /unicorn/<name> endpoint
     Then I receive a 400 status code
 

@@ -3,6 +3,10 @@ package ch.heigvd.amt.unicorns.api.spec.helpers;
 import ch.heigvd.amt.unicorns.api.DefaultApi;
 import ch.heigvd.amt.unicorns.ApiException;
 import ch.heigvd.amt.unicorns.ApiResponse;
+import ch.heigvd.amt.unicorns.api.dto.SimpleMagic;
+import ch.heigvd.amt.unicorns.api.dto.SimpleUnicorn;
+import ch.heigvd.amt.unicorns.api.dto.UpdateMagic;
+import ch.heigvd.amt.unicorns.api.dto.UpdateUnicorn;
 import ch.heigvd.amt.users.api.dto.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,7 +14,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
-import java.util.UUID;
 
 /**
  * Created by Olivier Liechti on 24/06/17.
@@ -25,8 +28,11 @@ public class Environment {
     private int lastStatusCode;
     private String token;
     private User userToken;
-    private String unicornName;
-    private String magicName;
+
+    private SimpleUnicorn simpleUnicorn;
+    private UpdateUnicorn updateUnicorn;
+    private SimpleMagic simpleMagic;
+    private UpdateMagic updateMagic;
 
     public Environment() throws IOException {
         Properties properties = new Properties();
@@ -86,14 +92,6 @@ public class Environment {
         this.token = token;
     }
 
-    public String getUnicornName() {
-        return unicornName;
-    }
-
-    public String getMagicName() {
-        return magicName;
-    }
-
     public void createFakeToken() {
         Algorithm algorithmHS = Algorithm.HMAC256("secret");
         Date now = new Date();
@@ -110,5 +108,37 @@ public class Environment {
 
     public void setUserToken(User userToken) {
         this.userToken = userToken;
+    }
+
+    public SimpleUnicorn getSimpleUnicorn() {
+        return simpleUnicorn;
+    }
+
+    public void setSimpleUnicorn(SimpleUnicorn simpleUnicorn) {
+        this.simpleUnicorn = simpleUnicorn;
+    }
+
+    public UpdateUnicorn getUpdateUnicorn() {
+        return updateUnicorn;
+    }
+
+    public void setUpdateUnicorn(UpdateUnicorn updateUnicorn) {
+        this.updateUnicorn = updateUnicorn;
+    }
+
+    public SimpleMagic getSimpleMagic() {
+        return simpleMagic;
+    }
+
+    public void setSimpleMagic(SimpleMagic simpleMagic) {
+        this.simpleMagic = simpleMagic;
+    }
+
+    public UpdateMagic getUpdateMagic() {
+        return updateMagic;
+    }
+
+    public void setUpdateMagic(UpdateMagic updateMagic) {
+        this.updateMagic = updateMagic;
     }
 }
