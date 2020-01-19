@@ -1,7 +1,5 @@
 # Testing
 
-[TOC]
-
 There are a lot of possibilities when we talk about tests. The image below show a classification of all tests. With _Cucumber_ we are in the quadrant Q1: **Unit tests and Integration tests** and with _JMeter_ we are in the quadrant Q4: **performance tests, security tests and fault-tolerance test**. We talk more about both strategy right after.
 
 ![](img/test_type.png)
