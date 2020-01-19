@@ -1,7 +1,5 @@
 # Testing
 
-[TOC]
-
 There are a lot of possibilities when we talk about tests. The image below show a classification of all tests. With _Cucumber_ we are in the quadrant Q1: **Unit tests and Integration tests** and with _JMeter_ we are in the quadrant Q4: **performance tests, security tests and fault-tolerance test**. We talk more about both strategy right after.
 
 ![](img/test_type.png)
@@ -104,8 +102,12 @@ JVM_ARGS='-Xms8192m -Xmx8192m' ./bin/jmeter -n -t ../AMT/Teaching-HEIGVD-AMT-201
 We are pretty happy about our _Cucumber_ tests because they cover a lot of code of our APIs. We tried to test every scenario that could happen in APIs. Here are screen shots of code coverage obtained with the tests.
 
 ![coverage_global](img/coverage_global.png)
+
 ![coverage_filter](img/coverage_filter.png)
+
 ![coverage_business](img/coverage_business.png)
+
+![](img/coverage_unicorn.png)
 
 We manage to factorize some tests definition with regex and by putting them in the class _CommonSteps_. To do that we had to put all common variables in the _Environment_ class so that every steps class could get these variables.
 

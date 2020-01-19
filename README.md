@@ -17,7 +17,12 @@ The script `launch_project.sh` is used to start the production environment. The 
 $./launch_project.sh [-f]
 ```
 
-Once the environment is up you can launch tests. To do that you simply have to run the script :
+Once the topology is ready you can have the swagger documentation for both APIs:
+
+- Authentication API http://localhost/auth/swagger-ui.html
+- Unicorns API http://localhost/app/swagger-ui.html
+
+When the topology is ready the script ask you if you want to run test. If you want to run tests after you can simply use the script below : 
 
 ```bash
 $./run_tests.sh
@@ -26,10 +31,10 @@ $./run_tests.sh
 The script `./cleanDocker.sh` will remove folders created to make volume on database container for data persistence and down the topology.
 
 ```bash
-$./ceanDocker.sh
+$./cleanDocker.sh
 ```
 
-**Note : **Tests will add some testing data in database, if you don't want these data in the environment you can run the script `./cleanDocker.sh` and `./launch_project.sh` again.
+**Note : ** Tests will add some testing data in database, if you don't want these data in the environment you can run the script `./cleanDocker.sh` and `./launch_project.sh` again.
 
 ## Report
 

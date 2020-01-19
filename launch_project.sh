@@ -33,7 +33,8 @@ if [ "$fullBuild" = true ]
 fi
 if [ $? -eq 0 ]
   then
-    echo "\n\e[32mEnvironment launched, wait 10 seconds.\e[0m\n"
+    echo "\n\e[31mPlease wait 10 seconds\e[0m\n"
+    sleep 10
     printf "Authentication API swagger :\t\e[1mhttp://localhost/auth/swagger-ui.html\e[0m\n"
 
     printf "Application API swagger:\t\e[1mhttp://localhost/app/swagger-ui.html\e[0m\n"
