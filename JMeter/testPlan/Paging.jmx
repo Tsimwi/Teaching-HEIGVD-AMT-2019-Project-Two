@@ -12,7 +12,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -64,7 +64,7 @@
               <stringProp name="RegexExtractor.refname">token</stringProp>
               <stringProp name="RegexExtractor.regex">(.*)</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
-              <stringProp name="RegexExtractor.default">nulllllll</stringProp>
+              <stringProp name="RegexExtractor.default">null</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
               <stringProp name="Sample.scope">all</stringProp>
               <stringProp name="Scope.variable">jwt</stringProp>
@@ -89,14 +89,14 @@
               <collectionProp name="Arguments.arguments">
                 <elementProp name="pageNumber" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">100</stringProp>
+                  <stringProp name="Argument.value">1</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">pageNumber</stringProp>
                 </elementProp>
                 <elementProp name="numberPerPage" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">49</stringProp>
+                  <stringProp name="Argument.value">10</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">numberPerPage</stringProp>
