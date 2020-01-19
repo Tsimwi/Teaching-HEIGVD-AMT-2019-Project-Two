@@ -4,6 +4,7 @@ import ch.heigvd.amt.unicorns.api.MagicsApi;
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleMagic;
+import ch.heigvd.amt.unicorns.api.model.UpdateMagic;
 import ch.heigvd.amt.unicorns.business.MagicsService;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import io.swagger.annotations.ApiParam;
@@ -57,7 +58,7 @@ public class MagicsApiController implements MagicsApi {
         }
     }
 
-    public ResponseEntity<Void> updateMagic(@ApiParam(value = "", required = true) @PathVariable("name") String name, @ApiParam(value = "", required = true) @Valid @RequestBody SimpleMagic magic) {
+    public ResponseEntity<Void> updateMagic(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody UpdateMagic magic) {
         try {
             return magicsService.updateMagic(name, magic, (String) httpServletRequest.getAttribute("email"));
         } catch (ApiException exception) {
@@ -72,21 +73,4 @@ public class MagicsApiController implements MagicsApi {
             return new ResponseEntity<>(HttpStatus.valueOf(exception.getCode()));
         }
     }
-
-    private MagicEntity toMagicEntity(Magic magic) {
-        MagicEntity entity = new MagicEntity();
-        entity.setName(magic.getName());
-        entity.setPower(magic.getPower());
-        entity.setSpell(magic.getSpell());
-        return entity;
-    }
-
-    private Magic toMagic(MagicEntity entity) {
-        Magic magic = new Magic();
-        magic.setName(entity.getName());
-        magic.setPower(entity.getPower());
-        magic.setSpell(entity.getSpell());
-        return magic;
-    }
-
 }

@@ -2,6 +2,7 @@ package ch.heigvd.amt.unicorns.api.endpoints;
 
 import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
+import ch.heigvd.amt.unicorns.api.model.UpdateUnicorn;
 import ch.heigvd.amt.unicorns.business.UnicornsService;
 import ch.heigvd.amt.unicorns.api.UnicornsApi;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
@@ -56,7 +57,7 @@ public class UnicornsApiController implements UnicornsApi {
         }
     }
 
-    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "", required = true) @PathVariable("name") String name, @ApiParam(value = "", required = true) @Valid @RequestBody SimpleUnicorn unicorn) {
+    public ResponseEntity<Void> updateUnicorn(@ApiParam(value = "",required=true) @PathVariable("name") String name,@ApiParam(value = "" ,required=true )  @Valid @RequestBody UpdateUnicorn unicorn) {
         try {
             return unicornsService.updateUnicorn(name, unicorn, (String) httpServletRequest.getAttribute("email"));
         } catch (ApiException exception) {

@@ -3,16 +3,11 @@ package ch.heigvd.amt.unicorns.api.spec.steps;
 import ch.heigvd.amt.unicorns.api.DefaultApi;
 import ch.heigvd.amt.unicorns.api.dto.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.dto.Unicorn;
+import ch.heigvd.amt.unicorns.api.dto.UpdateUnicorn;
 import ch.heigvd.amt.unicorns.api.spec.helpers.Environment;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import ch.heigvd.amt.unicorns.ApiException;
-import ch.heigvd.amt.unicorns.ApiResponse;
-import ch.heigvd.amt.unicorns.api.DefaultApiTest;
-import ch.heigvd.amt.unicorns.api.dto.MagicTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,32 +23,21 @@ public class UnicornsSteps {
     private Environment environment;
     private DefaultApi api;
 
-    private SimpleUnicorn unicorn;
     private Unicorn receivedUnicorn;
     private List<SimpleUnicorn> simpleUnicornList;
-    private UUID uuid;
-    private UUID uuidUpdated;
+
+    private boolean updatedHasWingBoolean;
 
     public UnicornsSteps(Environment environment) {
         this.environment = environment;
         this.api = environment.getApi();
         this.simpleUnicornList = new ArrayList<>();
-        this.uuid = UUID.randomUUID();
-    }
-
-    @Given("^I have a unicorn payload$")
-    public void iHaveAUnicornPayload() throws Throwable {
-        this.unicorn = new SimpleUnicorn();
-        this.unicorn.setName(this.uuid.toString());
-        this.unicorn.setColor("Purple");
-        this.unicorn.setHasWings(false);
-        this.unicorn.setSpeed(8);
     }
 
     @When("^I POST it to the /unicorns endpoint$")
     public void iPOSTItToTheUnicornsEndpoint() {
         try {
-            environment.setLastApiResponse(api.addUnicornWithHttpInfo(this.unicorn));
+            environment.setLastApiResponse(api.addUnicornWithHttpInfo(environment.getSimpleUnicorn()));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -84,7 +68,7 @@ public class UnicornsSteps {
     @When("^I DELETE it to the /unicorns/<name> endpoint$")
     public void iDELETEItToTheUnicornsEndpoint() throws Throwable {
         try {
-            environment.setLastApiResponse(api.deleteUnicornWithHttpInfo(unicorn.getName()));
+            environment.setLastApiResponse(api.deleteUnicornWithHttpInfo(environment.getSimpleUnicorn().getName()));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -109,10 +93,10 @@ public class UnicornsSteps {
         assertFalse(simpleUnicornList.isEmpty());
     }
 
-    @When("^I GET /unicorns/<name> endpoint with fullviwes (.*)$")
-    public void iGETUnicornsNameEndpointWithFullviwesFalse(String arg0) {
+    @When("^I GET /unicorns/<name> endpoint with fullview (.*)$")
+    public void iGETUnicornsNameEndpointWithFullviewFalse(String arg0) {
         try {
-            environment.setLastApiResponse(api.getUnicornByNameWithHttpInfo(this.unicorn.getName(), arg0.equals("true")));
+            environment.setLastApiResponse(api.getUnicornByNameWithHttpInfo(environment.getSimpleUnicorn().getName(), arg0.equals("true")));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -127,28 +111,34 @@ public class UnicornsSteps {
     }
 
 
-    @And("^I receive an Unicorns with fullviews (.*)$")
-    public void iReceiveAnUnicornsWithFullviews(String arg0) {
+    @And("^I receive an Unicorns with fullview (.*)$")
+    public void iReceiveAnUnicornsWithFullview(String arg0) {
         if (arg0.equals("true")) {
             assertNotNull(receivedUnicorn);
             assertNotNull(receivedUnicorn.getMagics());
         } else {
             assertNotNull(receivedUnicorn);
-            assertEquals(receivedUnicorn.getName(), unicorn.getName());
+            assertEquals(receivedUnicorn.getName(), environment.getSimpleUnicorn().getName());
         }
 
     }
 
     @And("^I update my unicorn payload$")
     public void iUpdateMyUnicornPayload() {
-        uuidUpdated = UUID.randomUUID();
-        unicorn.setName(uuidUpdated.toString());
+        SimpleUnicorn simpleUnicorn = environment.getSimpleUnicorn();
+        UpdateUnicorn updateUnicorn = new UpdateUnicorn();
+        updatedHasWingBoolean = !simpleUnicorn.getHasWings();
+
+        updateUnicorn.setHasWings(updatedHasWingBoolean);
+        updateUnicorn.setColor(simpleUnicorn.getColor());
+        updateUnicorn.setSpeed(simpleUnicorn.getSpeed());
+        environment.setUpdateUnicorn(updateUnicorn);
     }
 
     @When("^I PUT it to the /unicorn/<name> endpoint$")
     public void iPUTItToTheUnicornNameEndpoint() {
         try {
-            environment.setLastApiResponse(api.updateUnicornWithHttpInfo(uuid.toString(), unicorn));
+            environment.setLastApiResponse(api.updateUnicornWithHttpInfo(environment.getSimpleUnicorn().getName(), environment.getUpdateUnicorn()));
             environment.setLastApiCallThrewException(false);
             environment.setLastApiException(null);
             environment.setLastStatusCode(environment.getLastApiResponse().getStatusCode());
@@ -161,30 +151,31 @@ public class UnicornsSteps {
         }
     }
 
-    @And("^I receive an Unicorns that match the update with fullviews false$")
-    public void iReceiveAnUnicornsThatMatchTheUpdateWithFullviewsFalse() {
-        assertEquals(uuidUpdated.toString(), unicorn.getName());
+    @And("^I receive an Unicorns that match the update with fullview false$")
+    public void iReceiveAnUnicornsThatMatchTheUpdateWithFullviewFalse() {
+        assertEquals(updatedHasWingBoolean, environment.getUpdateUnicorn().getHasWings());
     }
 
     @Given("^I have a malformed unicorn payload$")
     public void iHaveAMalformedUnicornPayload() {
-        this.unicorn = new SimpleUnicorn();
-        this.unicorn.setName(this.uuid.toString());
-        this.unicorn.setColor("");
-        this.unicorn.setHasWings(false);
-        this.unicorn.setSpeed( null);
+        SimpleUnicorn unicorn = new SimpleUnicorn();
+        unicorn.setName(UUID.randomUUID().toString());
+        unicorn.setColor("");
+        unicorn.setHasWings(false);
+        unicorn.setSpeed(null);
+        environment.setSimpleUnicorn(unicorn);
     }
 
     @And("^I take the first unicorn in the list$")
     public void iTakeTheFirstInTheList() {
         assertNotNull(this.simpleUnicornList);
-        this.unicorn = simpleUnicornList.get(0);
+        environment.setSimpleUnicorn(simpleUnicornList.get(0));
 
     }
 
     @Given("^I have an unicorn name$")
     public void iHaveAnUnicornName() {
-        this.unicorn = new SimpleUnicorn();
-        this.unicorn.setName(UUID.randomUUID().toString());
+        environment.setSimpleUnicorn(new SimpleUnicorn());
+        environment.getSimpleUnicorn().setName(UUID.randomUUID().toString());
     }
 }

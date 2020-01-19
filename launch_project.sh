@@ -33,11 +33,16 @@ if [ "$fullBuild" = true ]
 fi
 if [ $? -eq 0 ]
   then
-    echo "\n\e[32mEnvironment launched\e[0m\n"
+    echo "\n\e[32mEnvironment launched, wait 10 seconds.\e[0m\n"
     printf "Authentication API swagger :\t\e[1mhttp://localhost/auth/swagger-ui.html\e[0m\n"
 
     printf "Application API swagger:\t\e[1mhttp://localhost/app/swagger-ui.html\e[0m\n"
-    printf "\nYou can now run test with the script './run_tests.sh'\n\n"
+    read -p "Do you want to launch tests (y/n)?" choice
+    case "$choice" in
+      y|Y ) ./run_tests.sh;;
+      n|N ) echo "no";;
+      * ) echo "invalid";;
+    esac
   else
     echo "\e[31mDocker-compose up failed. You can have more details in ./error.log\n\n"
 fi

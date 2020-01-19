@@ -14,17 +14,17 @@ Feature: Unicorns related actions
     Given I have a unicorn payload
     When I POST it to the /unicorns endpoint
     Then I receive a 201 status code
-    When I GET /unicorns/<name> endpoint with fullviwes false
+    When I GET /unicorns/<name> endpoint with fullview false
     Then I receive a 200 status code
-    And I receive an Unicorns with fullviews false
+    And I receive an Unicorns with fullview false
 
   Scenario: Get info about a unicorn
     Given I have a unicorn payload
     And I POST it to the /unicorns endpoint
     And I receive a 201 status code
-    When I GET /unicorns/<name> endpoint with fullviwes true
+    When I GET /unicorns/<name> endpoint with fullview true
     Then I receive a 200 status code
-    And I receive an Unicorns with fullviews true
+    And I receive an Unicorns with fullview true
 
   Scenario: Update a unicorn
     Given I have a unicorn payload
@@ -33,8 +33,8 @@ Feature: Unicorns related actions
     And I update my unicorn payload
     When I PUT it to the /unicorn/<name> endpoint
     Then I receive a 200 status code
-    And I GET /unicorns/<name> endpoint with fullviwes false
-    And I receive an Unicorns that match the update with fullviews false
+    And I GET /unicorns/<name> endpoint with fullview false
+    And I receive an Unicorns that match the update with fullview false
 
   Scenario: Delete a unicorn
     Given I have a unicorn payload
@@ -42,7 +42,7 @@ Feature: Unicorns related actions
     And I receive a 201 status code
     When I DELETE it to the /unicorns/<name> endpoint
     Then I receive a 200 status code
-    When I GET /unicorns/<name> endpoint with fullviwes false
+    When I GET /unicorns/<name> endpoint with fullview false
     Then I receive a 404 status code
 
 #   This test tests the filter, this is why we perform this test on a single endpoint
@@ -70,18 +70,19 @@ Feature: Unicorns related actions
 
   Scenario: Get a unicorn that doesn't exist
     Given I have an unicorn name
-    When I GET /unicorns/<name> endpoint with fullviwes false
+    When I GET /unicorns/<name> endpoint with fullview false
     Then I receive a 404 status code
 
   Scenario: Get a unicorn of an other user
     Given I have a unicorn payload
     And I POST it to the /unicorns endpoint
     Then I change the jwt to have a new one of an other user
-    When I GET /unicorns/<name> endpoint with fullviwes false
+    When I GET /unicorns/<name> endpoint with fullview false
     Then I receive a 403 status code
 
   Scenario: Update an unicorn with a malformed payload
     Given I have a malformed unicorn payload
+    And I update my unicorn payload
     When I PUT it to the /unicorn/<name> endpoint
     Then I receive a 400 status code
 

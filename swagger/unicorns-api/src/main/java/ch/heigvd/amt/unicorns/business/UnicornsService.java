@@ -4,6 +4,7 @@ import ch.heigvd.amt.unicorns.api.exceptions.ApiException;
 import ch.heigvd.amt.unicorns.api.model.Magic;
 import ch.heigvd.amt.unicorns.api.model.SimpleUnicorn;
 import ch.heigvd.amt.unicorns.api.model.Unicorn;
+import ch.heigvd.amt.unicorns.api.model.UpdateUnicorn;
 import ch.heigvd.amt.unicorns.api.util.PayloadVerification;
 import ch.heigvd.amt.unicorns.entities.MagicEntity;
 import ch.heigvd.amt.unicorns.entities.UnicornEntity;
@@ -118,9 +119,9 @@ public class UnicornsService {
      * @return A response code related to the result
      * @throws ApiException An exception in case of error during the process
      */
-    public ResponseEntity<Void> updateUnicorn(String name, SimpleUnicorn unicorn, String owner) throws ApiException {
+    public ResponseEntity<Void> updateUnicorn(String name, UpdateUnicorn unicorn, String owner) throws ApiException {
 
-        if (payloadVerification.checkPayloadIsValid(SimpleUnicorn.class, unicorn)) {
+        if (payloadVerification.checkPayloadIsValid(UpdateUnicorn.class, unicorn)) {
             UnicornEntity unicornEntity = unicornRepository.getUnicornEntityByName(name);
 
             if (unicornEntity != null) {
