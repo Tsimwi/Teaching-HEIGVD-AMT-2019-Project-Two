@@ -12,31 +12,31 @@ For the authentication API we have one table, `users_entity` that is represented
 
 To get the documentation about the endpoints you can go on [http://localhost/auth/swagger-ui.html](http://localhost/auth/swagger-ui.html) when the topology is launched.
 
-Once you are logged you receive a JWT to be able to make other call on API (add an user and update your password).
+Once you are logged you receive a JWT to be able to make other calls on API (add a user and update your password).
 
 ### Choices
 
 #### API "privacy"
 
-For this API we only have 3 endpoint:
+For this API we only have 3 endpoints:
 
 - one for authentication
 - one to add a new user (only for admin users)
 - one to update his password
 
-We chose to expose only thews endpoint to be very strict. We have no utility yet to get the user informations or a list of all users, that's why we don't have a `get /users` or a `get /users/<mail>`.
+We chose to expose only three endpoints to be very strict. We have no utility yet to get the user information or a list of all users, that's why we don't have a `get /users` or a `get /users/<mail>`.
 
 #### Admin privilege
 
-We chose the point that only an administrator can add an account to the auth api.
+We chose that only an administrator can add an account to the auth api.
 
 #### Update password
 
-To update the password we use the method `PATCH`. We chose this method because for an `user_entity` we will only change one properties and the payload of the request is identical for every requests (except the value of the password of course).
+To update the password we use the method `PATCH`. We chose this method because for a `user_entity` we will only change one propertiy and the payload of the request is identical for every request (except the value of the password of course).
 
 #### Payload verification
 
-To verify that the payload given in the request is valid we implemented a kind of _reflexion_. For the class of the payload we get all _getter_ and then we apply them on the payload and we check that the result of the _getter_ method is not null or not empty.
+To verify that the payload given in the request is valid we implemented a kind of _reflexion_. For the class of the payload we get all _getters_ and then we apply them on the payload and we check that the result of the _getter_ method is not null or not empty.
 
 ```java
     /**
@@ -78,7 +78,7 @@ To verify that the payload given in the request is valid we implemented a kind o
 
 #### Management of error code
 
-Our _ApiController_ delegate the work to a _business_ class that will do all the logic, the controller will _catch_ errors throw by _business_ and then get the code thrown and send it as a HTTP error code.
+Our _ApiController_ delegate the work to a _business_ class that will do all the logic. The controller will _catch_ errors thrown by _business_ and then send it as a HTTP error code.
 
 ## Application api
 
