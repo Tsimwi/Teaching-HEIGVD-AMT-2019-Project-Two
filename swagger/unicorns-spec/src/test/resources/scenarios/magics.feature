@@ -14,17 +14,17 @@ Feature: Magics related actions
     Given I have a magic payload
     When I POST it to the /magics endpoint
     Then I receive a 201 status code
-    When I GET /magics/<name> endpoint with fullviwes false
+    When I GET /magics/<name> endpoint with fullview false
     Then I receive a 200 status code
-    And I receive an Magics with fullviews false
+    And I receive a Magic with fullview false
 
   Scenario: Get info about a magic
     Given I have a magic payload
     And I POST it to the /magics endpoint
     And I receive a 201 status code
-    When I GET /magics/<name> endpoint with fullviwes true
+    When I GET /magics/<name> endpoint with fullview true
     Then I receive a 200 status code
-    And I receive an Magics with fullviews true
+    And I receive a Magic with fullview true
 
   Scenario: Update a magic
     Given I have a magic payload
@@ -33,8 +33,8 @@ Feature: Magics related actions
     And I update my magic payload
     When I PUT it to the /magic/<name> endpoint
     Then I receive a 200 status code
-    And I GET /magics/<name> endpoint with fullviwes false
-    And I receive an Magics that match the update with fullviews false
+    And I GET /magics/<name> endpoint with fullview false
+    And I receive a Magic that match the update with fullview false
 
   Scenario: Delete a magic
     Given I have a magic payload
@@ -42,7 +42,7 @@ Feature: Magics related actions
     And I receive a 201 status code
     When I DELETE it to the /magics/<name> endpoint
     Then I receive a 200 status code
-    When I GET /magics/<name> endpoint with fullviwes false
+    When I GET /magics/<name> endpoint with fullview false
     Then I receive a 404 status code
 
 #   This test tests the filter, this is why we perform this test on a single endpoint
@@ -69,15 +69,15 @@ Feature: Magics related actions
     Then I receive a 409 status code
 
   Scenario: Get a magic that doesn't exist
-    Given I have an magic name
-    When I GET /magics/<name> endpoint with fullviwes false
+    Given I have a magic name
+    When I GET /magics/<name> endpoint with fullview false
     Then I receive a 404 status code
 
   Scenario: Get a magic of an other user
     Given I have a magic payload
     And I POST it to the /magics endpoint
     Then I change the jwt to have a new one of an other user
-    When I GET /magics/<name> endpoint with fullviwes false
+    When I GET /magics/<name> endpoint with fullview false
     Then I receive a 403 status code
 
   Scenario: Update an magic with a malformed payload
@@ -99,7 +99,7 @@ Feature: Magics related actions
     Then I receive a 403 status code
 
   Scenario: Delete an magic that doesn't exist
-    Given I have an magic name
+    Given I have a magic name
     When I DELETE it to the /magics/<name> endpoint
     Then I receive a 404 status code
 

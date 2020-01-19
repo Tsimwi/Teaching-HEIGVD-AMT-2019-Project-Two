@@ -97,8 +97,8 @@ public class MagicsSteps {
         assertFalse(simpleMagicsList.isEmpty());
     }
 
-    @When("^I GET /magics/<name> endpoint with fullviwes (.*)$")
-    public void iGETMagicsNameEndpointWithFullviwesFalse(String arg0) {
+    @When("^I GET /magics/<name> endpoint with fullview (.*)$")
+    public void iGETMagicsNameEndpointWithFullviewFalse(String arg0) {
         try {
             environment.setLastApiResponse(api.getMagicByNameWithHttpInfo(environment.getSimpleMagic().getName(), arg0.equals("true")));
             environment.setLastApiCallThrewException(false);
@@ -115,7 +115,7 @@ public class MagicsSteps {
     }
 
 
-    @And("^I receive an Magics with fullviews (.*)$")
+    @And("^I receive a Magic with fullview (.*)$")
     public void iReceiveAnMagicsWithFullviews(String arg0) {
         if (arg0.equals("true")) {
             assertNotNull(receivedMagic);
@@ -154,8 +154,8 @@ public class MagicsSteps {
         }
     }
 
-    @And("^I receive an Magics that match the update with fullviews false$")
-    public void iReceiveAnMagicsThatMatchTheUpdateWithFullviewsFalse() {
+    @And("^I receive a Magic that match the update with fullview false$")
+    public void iReceiveAMagicsThatMatchTheUpdateWithFullviewFalse() {
         assertEquals(updatedPowerValue, environment.getUpdateMagic().getPower());
     }
 
@@ -175,8 +175,8 @@ public class MagicsSteps {
 
     }
 
-    @Given("^I have an magic name$")
-    public void iHaveAnMagicName() {
+    @Given("^I have a magic name$")
+    public void iHaveAMagicName() {
         environment.setSimpleMagic(new SimpleMagic());
         environment.getSimpleMagic().setName(UUID.randomUUID().toString());
     }

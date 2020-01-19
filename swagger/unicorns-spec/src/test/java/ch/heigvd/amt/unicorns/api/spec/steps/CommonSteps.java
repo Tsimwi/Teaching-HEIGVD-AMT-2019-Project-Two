@@ -10,6 +10,7 @@ import ch.heigvd.amt.users.api.dto.User;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import io.swagger.models.auth.In;
 
 import java.util.UUID;
@@ -59,7 +60,7 @@ public class CommonSteps {
     }
 
     @Given("^I have a unicorn payload$")
-    public void iHaveAUnicornPayload() throws Throwable {
+    public void iHaveAUnicornPayload() {
         String color = "Purple";
         Integer speed = 8;
         boolean hasWings = false;
@@ -104,4 +105,6 @@ public class CommonSteps {
         environment.createFakeToken();
         api.getApiClient().setApiKey("Bearer " + environment.getToken());
     }
+
+
 }
