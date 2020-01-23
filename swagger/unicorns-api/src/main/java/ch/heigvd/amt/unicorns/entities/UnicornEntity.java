@@ -20,10 +20,6 @@ public class UnicornEntity implements Serializable {
     private String entityCreator;
 
     @ManyToMany (fetch = FetchType.LAZY)
-    /*@JoinTable(
-            name = "magicorn",
-            joinColumns = @JoinColumn(name = "unicorn_name"),
-            inverseJoinColumns = @JoinColumn(name = "magic_name"))*/
     private List<MagicEntity> magicEntities;
 
     public String getName() {

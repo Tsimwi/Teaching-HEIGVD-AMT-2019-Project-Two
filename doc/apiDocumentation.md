@@ -108,3 +108,4 @@ We chose to implement a filter that will be used to verify the JWT. The filter i
 #### Pagination
 
 We have to use paging in one of our endpoint, we chose to implement paging when a user want to list all of his magics or unicorns (`get /magics` or `get /unicorns`). To inform the "user" about the total number of items and the next page we added two header to the response: `Pagination-NumberOfItems` and `Pagination-Next`.
+
